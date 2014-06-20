@@ -1,0 +1,53 @@
+ul {
+   width: 90%;
+}
+li h4 {
+   display: inline-block;
+   padding: 10px;
+}
+
+textarea {
+   height: 150px;
+   max-height: 450px;
+   max-width: 850px;
+   font-size: 1em;
+}
+
+label {
+   display: inline-block;
+   float: left;
+   max-width: 100px;
+   clear: both;
+}
+
+input[name="name"], input[name="tags"], textarea, select, #uplcont button {
+  width: 75%;
+  max-width: 800px;
+   -webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
+   -moz-box-sizing: border-box; /* For all Gecko based browsers */
+   -ms-box-sizing: border-box;
+   -o-box-sizing: border-box;
+   box-sizing: border-box;
+   margin: 0;
+   float: right;
+}
+
+input[type="file"] {
+   margin: 30px;
+}
+
+#upldcont {
+   position: relative;
+   display: block;
+   max-width: 85%;
+   margin: auto;
+}
+
+#upldcont input {
+   padding: 4px;
+   display: inline;
+}
+
+#submit {
+   float: right;
+}

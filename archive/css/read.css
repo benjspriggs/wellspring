@@ -1,0 +1,97 @@
+span {
+    display: block;
+}
+
+#insert {
+    padding: 10px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+#insert article {
+    position: relative;
+    max-height: 1250px;
+    border: 5px rgb(176, 76, 39) solid;
+    padding: 10px;
+    margin: 10px;
+}
+
+#insert img {
+    display: inline-block;
+    position: relative;
+    float: right;
+    padding-left: 10px;
+}
+
+#desc {
+    
+}
+
+#lyrics {
+    padding-left: 5px;
+    display: inline;
+}
+
+#stags {
+    color: rgba(80, 80, 95, .5);
+    text-justify: right;
+    display: inline-block;
+}
+
+#title {
+    display: inline-block;
+    margin: 13px;
+}
+
+.clicky {
+    width: 9px;
+    margin: -10px;
+    height: 80%;
+    background: rgb(176, 76, 39);
+    position: relative;
+    float: left;
+}
+
+.clicky:hover {
+    background: yellow;
+}
+
+.active {
+    height: 500px;
+    transition-timing-function: ease-out;
+    -webkit-transition: 1.25s all;
+    -moz-transition: 1.25s all;
+    -ms-transition: 1.25s all;
+    -o-transition: 1.25s all;
+    transition: 1.25s all;
+    box-shadow: 7px 0 0 #888888;
+}
+
+.hide {
+    height: 50px;
+    transition-timing-function: ease-out;
+    -webkit-transition: .75s all;
+    -moz-transition: .75s all;
+    -ms-transition: .75s all;
+    -o-transition: .75s all;
+    transition: .75s all;
+    box-shadow: 0 7px 0 #888888;
+}
+
+.visible {
+    opacity: 1;
+    -webkit-transition: 1.25s all;
+    -moz-transition: 1.25s all;
+    -ms-transition: 1.25s all;
+    -o-transition: 1.25s all;
+    transition: 1.25s all;
+}
+
+.hidden {
+    opacity: 0;
+    -webkit-transition: .35s all;
+    -moz-transition: .35s all;
+    -ms-transition: .35s all;
+    -o-transition: .35s all;
+    transition: .35s all;
+}

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html lang="en-us">
+    <head>
+        <meta charset="utf-8">
+            
+        <link rel="stylesheet" type="text/css" href="css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="css/header.css">
+        <!-- You're going to need a way for the search bar to be checked if it has any data in it -->
+        <!-- Don't forget the meta tags, and Google Font API links! -->
+        <!-- Link jquery/ external scripts here -->
+        <!-- Favicon info, make sure to name the .ico file favicon.ico for IE6 peeps -->
+      
+    </head>
+<body>
+<div id="header">
+    <h2><a href="home.php">Wellspring</a></h2>
+    
+    <ul> <!-- Navigational bar -->
+        <a href="home.php"><li>home</li></a>
+        <a href="edit.php"><li>write</li></a>
+        <a href="read.php"><li>read/ listen</li></a>
+    </ul>
+    
+    <div id="login">
+        <a href="login.php">Login/ Register</a>
+    </div>
+    
+    <div id="searchbar"> <!-- Search bar -->
+        <form enctype="multipart/form-data" method="get" action="search.php">
+            <input type="text" name="query" length="25" placeholder="Find a song">
+            <input type="submit" name="submit" value="Search">
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
