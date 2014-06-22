@@ -1,11 +1,6 @@
 <?php
 ##This script contains functions that the generality of the website uses
 
-##Sanitizes user data.
-function escape($data){
-    $data = mysql_real_escape_string($data);
-    return $data;
-}
 ##Finds the type of the media uploaded to the fileserver.
 function findMediaType($str){
     $type_img = array("jpg", "bmp", "png");

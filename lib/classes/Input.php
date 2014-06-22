@@ -15,20 +15,20 @@ class Input {
     }
     
     public static function get($item){
-        if(isset($_POST[$item])){
+        if (isset($_POST[$item])){
             return $_POST[$item];
-        } elseif(isset($_GET[$item])){
+        } elseif (isset($_GET[$item])){
             return $_GET[$item];
-        } elseif(isset($_FILES[$item])){
+        } elseif (isset($_FILES[$item])){
             return $_FILES[$item];
         }
         return NULL;
     }
     
     public static function put($item, $value, $type = 'post'){
-        if($type = 'post'){
+        if ($type = 'post'){
             $_POST[$item] = $value;
-        } elseif($type = 'get'){
+        } elseif ($type = 'get'){
             $_GET[$item] = $value;
         }
     }

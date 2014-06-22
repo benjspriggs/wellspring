@@ -1,16 +1,20 @@
 <?php
 $GLOBALS['config'] = array(
                 'session' => array(
-                                'session_name' => 'user',
+                                'session_name' => 'user_record',
                                 'token_name' => 'csrf',
-                                'username' => 'username'),
+                                'exittoken' => 'exittoken',
+                                'db' => 'session_data',
+                                'expiry' => '1 DAY'),
                 'remember' => array(
                                 'cookie_name' => 'key',
                                 'cookie_expiry' => 608400),
                 'hash' => array(
-                                'pepper' => '64a02bd7f1ab5ab1be9eb4yawehb8720'),
+                                'pepper' => '64aasddk-0412f1db5ab1be9eb4yawehb8720'),
                 'mail' => array(
-                                'verify_from' => 'emailaddress@domain.com'),
-                'app' => array(
-                                'root' => $_SERVER['DOCUMENT_ROOT']. '/wellspring'));
+                                'verify_from' => 'postmaster@digitize.com'),
+                'root' => array(
+                                'site' => $_SERVER['DOCUMENT_ROOT']. '/',
+                                'app' => $_SERVER['DOCUMENT_ROOT']. '/lib/',
+                                'uploads' => $_SERVER['DOCUMENT_ROOT']. '/uploads/'));
 ?>

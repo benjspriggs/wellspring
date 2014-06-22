@@ -18,7 +18,7 @@ class User {
                                   array('token'),
                                   array('user_id' => $id),
                                   array('user_id', '=', ':user_id'))->getResults();
-        if(isset($dbhash[0]['token'])){
+        if (isset($dbhash[0]['token'])){
             return $dbhash[0]['token'];
         } else {
             return NULL;
@@ -30,9 +30,9 @@ class User {
     }
     
     public function getErrors(){
-        if(!empty($this->_errors)){
+        if (!empty($this->_errors)){
             foreach($this->_errors as $errorkey => $text){
-                echo "<br>". $text ."<br>";
+                echo $text ."<br>";
             }
         }
     }
@@ -41,7 +41,7 @@ class User {
         $this->clearErrors();
         $STH = $this->STH;
         $results = $STH->get('users', array('username'), array('user_id' => $id), array('user_id', '=', ':user_id'))->getResults();
-        if(!empty($results)){
+        if (!empty($results)){
             $username = $results[0]['username'];
             return $username;
         } else {
@@ -53,22 +53,55 @@ class User {
     public function isLoggedIn($userid){
         $this->clearErrors();
         $STH = $this->STH;
-        $dbsess = $this->getDBHash($userid);
-        if($dbsess != NULL){
-            if(Session::get(Config::get('session/session_name')) == $dbsess){
-                if(Session::get(Config::get('session/session_name')) + md5(uniqid(self::getUsername($userid))) === Cookie::get(Config::get('remember/cookie_name'))){
-                    //The user is logged in and remembered
+        $dbhash = $this->getDBHash($userid); //Session data
+        $exists = $this->getUsername($userid);
+        if ($exists != NULL){
+            if ($dbhash != NULL){
+                if (Session::get(Config::get('session/session_name')) == $dbhash){
+                    if (Session::get(Config::get('session/session_name')) + md5(uniqid(self::getUsername($userid))) === Cookie::get(Config::get('remember/cookie_name'))){
+                        //The user is logged in and remembered
+                        return 3;
+                    }
+                    //The user is logged in successfully
                     return 2;
+                } else {
+                    $this->_errors[] = "The record exists but the session data does not match.";
+                    return 1;
                 }
-                //The user is logged in
-                return 1;
             } else {
-                $this->_errors[] = "The session data exists but does not match.";
-                return 0;
+                //Session data has not been created, and the user has not logged in anywhere else
+                return 1;
             }
+            
         } else {
-            $this->_errors[] = "The database session has not been created.";
+            $this->_errors[] = "That user does not exist.";
             return 0;
+        }
+    }
+    
+    public function isAccepted($userid){
+        $this->clearErrors();
+        $STH = $this->STH;
+        $res = $STH->get('users', array('is_accepted'), array('user_id' => $userid), array('user_id', '=', ':user_id'))->getResults();
+        if ($res[0]['is_accepted'] == 1){
+            return TRUE;
+        } elseif ($res[0]['is_accepted'] == 0) {
+            return FALSE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    public function isVerified($userid){
+        $this->clearErrors();
+        $STH = $this->STH;
+        $res = $STH->get('users', array('is_verified'), array('user_id' => $userid), array('user_id', '=', ':user_id'))->getResults();
+        if ($res[0]['is_verified'] == 1){
+            return TRUE;
+        } elseif ($res[0]['is_verified'] == 0) {
+            return FALSE;
+        } else {
+            return FALSE;
         }
     }
     
@@ -76,7 +109,7 @@ class User {
         $this->clearErrors();
         $STH = $this->STH;
         $results = $STH->get('users', array('user_id'), array('username' => $username), array('username', '=', ':username'))->getResults();
-        if(!empty($results)){
+        if (!empty($results)){
             $userid = $results[0]['user_id'];
             return $userid;
         } else {
@@ -87,7 +120,7 @@ class User {
     public function logIn($username, $password, $remember = FALSE){
         $this->clearErrors();
         $loggedin = $this->isLoggedIn($this->getUserID($username));
-        if($loggedin == 0){
+        if ($loggedin == 1){
             $PDO = $this->PDO;
             $STH = $this->STH;
             //Validate the information, make sure it's an actual user in the database (password is hashed already)
@@ -102,18 +135,19 @@ class User {
             $dbres = $STH->get('users', array('pass', 'salt'), array('username' => $username), array('username', '=', ':username'))->getResults();
             $dbhash = $dbres[0]['pass'];
             $salt = $dbres[0]['salt'];
-            if($validate->passed()){
+            if ($validate->passed()){
                 //$password = Hash::encode($password, $salt);
-                echo "DB Hash is :$dbhash <br>Password is:$password";
-                if($dbhash == $password){
+                //echo "DB Hash is :$dbhash <br>Password is:$password";
+                if ($dbhash == $password){
                     $this->loggedin = TRUE;
                     $token = Token::generate();
                     $user_id = $this->getUserID($username);
                     Session::put(Config::get('session/session_name'), $token);
-                    Session::put(Config::get('session/username'), $username);
+                    Session::put('username', $username);
+                    Session::put('uid', $user_id);
                     $STH->insert('session_data', array('user_id' => $user_id, 'token' => $token));
                     
-                    if($remember){
+                    if ($remember){
                         $cookie = $token . md5(uniqid($username));
                         Cookie::create(Config::get('remember/cookie_name'), $token);
                     }
@@ -121,13 +155,14 @@ class User {
                     return $this;
                 } else {
                     $this->_errors[] = "The hashes did not match.";
+                    echo "DB hash is:$dbhash<br>";
+                    echo "Password is:$password<br>";
                 }
             } else {
                 $this->_errors[] = "The information passed was not valid.";
                 return $this;
             }
         } else {
-            $this->_errors[] = "The user is already logged in.";
             return $this;
         }
     }
@@ -136,20 +171,23 @@ class User {
         $this->clearErrors();
         $STH = $this->STH;
         switch($this->isLoggedIn($id)){
-            case(2):
+            case(3):
                 Cookie::destroy(Config::get('remember/cookie_name'));
-            case(1):
+            case(2):
                 //BLOW IT UP DOOD
                 Session::destroy(Config::get('session/session_name'));
-                Session::destroy(Config::get('session/username'));
+                Session::destroy('username');
                 $STH->delete('session_data',
                              array('token' => $this->getDBHash($id)), array('token', '=', ':token'));
                 break;
-            case(0):
+            case(1):
                 $this->_errors[] = "The user is not logged in.";
                 return $this;
                 break;
-            
+            case(0):
+                $this->_errors[] = "User ID $id does not exist in the database.";
+                return $this;
+                break;
         }
     }
     
@@ -173,9 +211,9 @@ class User {
                             'unique' => 'users',
                             'is_email' => true));
         $validate->check($source, $items);
-        if($validate->passed()){
+        if ($validate->passed()){
             //If so, insert data
-            if($is_admin){
+            if ($is_admin){
                 $is_admin = 1;
             } else {
                 $is_admin = 0;
@@ -190,11 +228,11 @@ class User {
                                         'is_verified' => 0,
                                         'is_accepted' => 1,
                                         'is_admin' => $is_admin));
-            if($q->lastCount() == 0){
+            if ($q->lastCount() == 0){
                 $this->_errors[] = 'There was an error sending the data to the database.';
                 return $this;
             }
-            //Send email
+            //Send email with a token composed of that user's email and their salt into an md5()
             Mail::verify($email, $token);
             //Log in the user with limited permissions
             $this->logIn($username, $password, $remember);

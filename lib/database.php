@@ -1,13 +1,13 @@
 <?php
 
-define('hostname', 'localhost');
-define('username', 'root');
-define('database', 'wellspr_test');
-define('password', '9ahil30jxm1');
+define('hostname', 'spricoco.ipowermysql.com');
+define('username', 'dmanager');
+define('database', 'digitize');
+define('password', 'benja+cole');
 
 try {
     //Attempt to create mysql connection to database
-    $PDO = new PDO('mysql:host=localhost;dbname=wellspr_test', username, password);
+    $PDO = new PDO('mysql:host='.hostname.';dbname='.database , username, password);
     $PDO->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $e){
     echo $e->getMessage();

@@ -60,20 +60,20 @@ class StatementHandler {
     private function join(array $join, $where = array()){
         $sql = " ";
         foreach($join as $index => $info){
-            if(is_array($info)){
+            if (is_array($info)){
                 $sql .= $join['type']." JOIN (`";
                 $tbl = "";
                 $fields = "";
                 $conds = "";
                 $tbl .= $info['join_table'] ."`)";
                 $sql .= $tbl ." ON (";
-                    if(array_key_exists('join_table', $info) && array_key_exists('join_key', $info) && array_key_exists('primary_key', $info)){
+                    if (array_key_exists('join_table', $info) && array_key_exists('join_key', $info) && array_key_exists('primary_key', $info)){
                     $conds .= $info['primary_key'] ." = ". $info['join_key'];
                     
-                    if(!empty($where)){
+                    if (!empty($where)){
                         $conds .= " AND ". implode(" ", $where) ." ";
                     }
-                    if(array_key_exists('fields', $info)){
+                    if (array_key_exists('fields', $info)){
                         foreach($info['fields'] as $key => $field){
                             $fieldsr[] = "`". $info['join_table'] ."`.`". $field ."`";//Tags.song_id, tags.thing
                         }
@@ -101,22 +101,27 @@ class StatementHandler {
     public function query($sql, $values = array(), $fetch = FALSE, $table = ''){
         $this->clearErrors();
         $this->clearResults();
-        if($sth = $this->PDO->prepare($sql)){
-            //echo $sql."<br>";
-            if(!empty($values)){
-                //print_r($values);
+        if ($sth = $this->PDO->prepare($sql)){
+            /*
+             *Debug
+             */
+            //echo "SQL is:".$sql."<br>";
+            //echo "Values are:<br>";
+            //var_dump($values);
+            if (!empty($values)){
                 $sth->execute($values);
                 $this->_count = $sth->rowCount();
-                if($fetch){
+                if ($fetch){
                     $this->_results = $sth->fetchAll();
                 }
             } else {
                 $q = $this->PDO->query($sql);
-                $result = $q->fetchAll(PDO::FETCH_ASSOC);
-                $row = $q->fetchAll(PDO::FETCH_NUM);
+                
                 $this->_count = $q->rowCount();
                 
-                if($fetch){
+                if ($fetch){
+                    $result = $q->fetchAll(PDO::FETCH_ASSOC);
+                    $row = $q->fetchAll(PDO::FETCH_NUM);
                     $this->_results = $result;
                 }
             }
@@ -136,14 +141,14 @@ class StatementHandler {
         
         $sql = "SELECT ";
         
-        if($fields === '*'){
+        if ($fields === '*'){
             $sql .= $fields;
         } else {
             foreach($fields as $field){
                 $sql .= "`$table`.`$field`, ";
             }
             $sql = substr($sql, 0, -2). " "; //Trim space and comma
-            if(!empty($join)){
+            if (!empty($join)){
                 $ret_sql = $this->join($join, $where); //Join call
                 $sql .= ", ". $ret_sql[1];
             }
@@ -151,21 +156,20 @@ class StatementHandler {
         
         $sql .= "FROM `$table`";
         
-        if(!empty($join)){
+        if (!empty($join)){
             $sql .= $ret_sql[0];
         }
         
-        if(!empty($where) && count(array_intersect($operators, $where)) > 0){
+        if (!empty($where) && count(array_intersect($operators, $where)) > 0){
             $sql .= " WHERE ";
             $wheres = implode(" ", $where);
             $sql .= $wheres;
         }
         
-        if(!empty($orderby) && in_array($fields, $orderby)){
+        if (!empty($orderby) && in_array($fields, $orderby)){
             $sql .= " ORDER BY ";
             $orderby = "`$table`.`". implode("` ", $orderby);
         }
-        
         
         //Figure out field stuff here
         $sql .= " ". $extra;
@@ -181,11 +185,11 @@ class StatementHandler {
         $this->clearErrors();
         $this->begin();
         $sql = "DELETE ";
-        if(!empty($fields)){
+        if (!empty($fields)){
             $sql .= implode(", ", $fields);
         }
         $sql .= "FROM `$table` WHERE ". implode(" ", $where);
-        if(!empty($join)){
+        if (!empty($join)){
             $sql .= $this->join($join, $fields);
         }
         $sql .= " ". $extra;
@@ -196,36 +200,38 @@ class StatementHandler {
     }
     
     //Tables array holds fields- [0]->[table => songs_meta, data=>array(field=> value, field=> value, value...)] etc
-    //It is assumed that the autoincrementing row will not be mentioned in its respective field array
+    //It is assumed that the autoincrementing row will not be mentioned in its table's respective field array
     public function insert($tables = array(), $data = array(), $primarytable = '', $keyname = ''){
         $this->clearErrors();
         $this->begin();
         //Used a foreach loop in order to keep the LAST_INSERT_ID() functionality of PDO
-        if(is_array($tables)){
+        if (is_array($tables)){
             foreach($data as $tablename => $dataset){
+                
                 $field = $tables[$tablename];
                 $sql = "INSERT INTO `$tablename` ";
-                $fieldsStr = "(". implode(", ", $field) .")";
-                $valuesStr = "(:". implode(", :", $field) .")";
-                $sql .= "$fieldsStr VALUES $valuesStr";
+                $fieldsStr = implode(", ", $field);
+                $valuesStr = implode(", :", $field);
+                $sql .= "($fieldsStr) VALUES (:$valuesStr)";
                 
-                if(!isset($dataset[0])){
+                
+                if (!isset($dataset[0])){ //The array is simple, and does not require anything fancy to make the data legit
                     $this->query($sql, $dataset);
-                    if($tablename == $primarytable){
-                        $masterKey = $this->getConnection()->lastInsertId($primarytable .".". $keyname);
-                    }
                 } else {
                     foreach($dataset as $pairs){
                         $toReplaceArray = array_keys($pairs, 'LAST_INSERT_ID()');
                         
-                        if(!empty($toReplaceArray)){
+                        if (!empty($toReplaceArray)){
                             $toReplace = $toReplaceArray[0];
                             $pairs[$toReplace] = $masterKey;
                         }
                         $this->query($sql, $pairs);
                     }
                 }
-            
+                //This is at the end, since you won't ever have to replace a data pair in the lookup table you are referencing ($primarytable)
+                if ($tablename == $primarytable){
+                    $masterKey = $this->getConnection()->lastInsertId($primarytable .".". $keyname);
+                }
             }
         } else {
             $sql = "INSERT INTO `$tables` ";
@@ -249,7 +255,7 @@ class StatementHandler {
     public function update($table, $fields = array(), $values = array(), $where = array(), $extra = ''){
         $this->clearErrors();
         $this->begin();
-        if(is_array($table)){
+        if (is_array($table)){
             foreach($table as $key => $t){
                 $sql = "UPDATE `$t` SET ";
                 foreach($fields as $table => $field){
@@ -257,7 +263,7 @@ class StatementHandler {
                 }
                 $fieldsStr = substr($fieldsStr, 0, -2). " "; //Trim last comma
                 $sql .= $fieldsStr;
-                if(!empty($where) && isset($where[$t])){
+                if (!empty($where) && isset($where[$t])){
                     $sql .= " WHERE ";
                     $sql .= implode(" ", $where);
                 }
@@ -274,7 +280,7 @@ class StatementHandler {
             }
             $fieldsStr = substr($fieldsStr, 0, -2). " "; //Trim last comma
             $sql .= $fieldsStr;
-            if(!empty($where)){
+            if (!empty($where)){
                 $sql .= " WHERE ";
                 $sql .= implode(" ", $where);
             }

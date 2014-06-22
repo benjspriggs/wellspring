@@ -1,7 +1,11 @@
 <?php
 class Session {
     public static function exists($name){
-        return(isset($_SESSION[$name])) ? true : false;
+        if (isset($_SESSION[$name])){
+            return TRUE;
+        } else {
+            return FALSE;
+        }
     }
     
     public static function put($name, $value){
@@ -9,13 +13,17 @@ class Session {
     }
     
     public static function get($name){
-        if(Session::exists($name)){
+        if (Session::exists($name)){
             return $_SESSION[$name];
         }
     }
     
     public static function create(){
-        session_start();
+        if (isset($_SESSION)){
+            session_regenerate_id(true);
+        } else {
+            session_start();
+        }        
     }
     
     public static function destroy($name){
