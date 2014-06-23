@@ -3,40 +3,39 @@
     <head>
         <title><?php echo $t->getName();?></title>
         <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="css/normalize.css">    
+        <link rel="stylesheet" type="text/css" href="lib/content/css/normalize.css">    
         <?php
         foreach ($t->getCss() as $file => $name){
-            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"css/". $name .".css\">\n";
+            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"lib/content/css/". $name .".css\">\n";
         }
         
         ?>
-        <link rel="stylesheet" type="text/css" href="css/header.css">
+        <link rel="stylesheet" type="text/css" href="lib/content/css/header.css">
         <!-- You're going to need a way for the search bar to be checked if it has any data in it -->
         <!-- Don't forget the meta tags, and Google Font API links! -->
         <!-- Link jquery/ external scripts here -->
         <!-- Favicon info, make sure to name the .ico file favicon.ico for IE6 peeps -->
-        <meta name="description" content="<?php echo $view->songdesc;?>">
     </head>
     
     <body>
         <div class="page">
-            <?php include_once('incl/header.php');?>
+            <?php include_once('lib/content/incl/header.php');?>
             <div id="content">
-                <?php $path = $t->getContent(); include_once("content/$path");?>
+                <?php $path = $t->getContent(); include_once("lib/content/$path");?>
             </div>
             <div id="sidebar">
-                <?php include_once('incl/updates.html');?>
+                <?php include_once('lib/content/incl/updates.html');?>
             </div>
             <div id="footer">
-                <?php include_once('incl/footer.html');?>
+                <?php include_once('lib/content/incl/footer.html');?>
             </div>
         </div>
     </body>
-    <script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="lib/content/js/jquery-1.10.2.js"></script>
         <?php
-        if($t->getJs() != NULL){
+        if ($t->getJs() != NULL){
             foreach ($t->getJs() as $file => $name){
-                echo "<script type=\"text/javascript\" src=\"js/". $name .".js\"></script>";
+                echo "<script type=\"text/javascript\" src=\"lib/content/js/". $name .".js\"></script>";
             }
         }
         ?>

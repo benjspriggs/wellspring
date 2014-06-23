@@ -1,5 +1,5 @@
 <?php
-session_save_path('/hermes/bosnaweb04b/b1942/ipw.spricoco/phpsessions');
+//session_save_path('/hermes/bosnaweb04b/b1942/ipw.spricoco/phpsessions');
 
 $fp = dirname(__FILE__);
 require_once $fp . '/database.php';

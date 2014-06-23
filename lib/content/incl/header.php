@@ -1,5 +1,5 @@
 <?php
-if(Session::exists(Config::get('session/session_name'))){
+if (Session::exists(Config::get('session/session_name'))){
     $login = "Welcome, ";
     $login .= Session::get(Config::get('session/username')). "!   ";
     //Echo a href that will log the user out

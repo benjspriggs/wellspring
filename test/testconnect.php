@@ -5,7 +5,7 @@ $mysql = new mysqli('localhost', 'root', '9ahil30jxm1', 'wellspr_test');
 //$res = $mysql->select('songs_meta');
 $res = $mysql->query('SELECT * FROM songs_meta');
 print_r($res);
-if($res != NULL){
+if ($res != NULL){
     print_r($res->fetch_array());
     echo "df";
 }

@@ -25,7 +25,7 @@ class Song {
         private function createTags($song_name, $tags = NULL){
                 $songTags = array();
                 $songTags[] = explode(" ", $song_name);
-                if($tags){
+                if ($tags){
                         $songTags[] = explode(",", $tags);
                 }
                 $res = implode(", ", $songTags);

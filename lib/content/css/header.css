@@ -37,13 +37,11 @@
    display: inline-block;
    float: right;
    clear: both;
-   background: rgb(60, 100, 120);
    padding: 4px;
    margin-top: 0;
    width: 245px;
 }
 
-#searchbar input {
-   border: none;
+#searchbar form input {
    line-height: 1.5;
 }

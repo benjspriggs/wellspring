@@ -7,7 +7,7 @@ class Template {
     
     ##Title is the name of the web page, name is name of the file
     public function __construct($name, $css, $content = '', $js = array()){
-        $this->name = $name . " | DiGITIZE";
+        $this->name = $name . " | Wellspring";
         $this->css = $css;
         $this->js = $js;
         $this->content = $content;

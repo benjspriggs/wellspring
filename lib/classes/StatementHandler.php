@@ -201,9 +201,10 @@ class StatementHandler {
     
     //Tables array holds fields- [0]->[table => songs_meta, data=>array(field=> value, field=> value, value...)] etc
     //It is assumed that the autoincrementing row will not be mentioned in its table's respective field array
-    public function insert($tables = array(), $data = array(), $primarytable = '', $keyname = ''){
+    public function insert($tables = array(), $data = array(), $primarytable = '', $keyname = '', $update = FALSE){
         $this->clearErrors();
         $this->begin();
+        $p_sql = '';
         //Used a foreach loop in order to keep the LAST_INSERT_ID() functionality of PDO
         if (is_array($tables)){
             foreach($data as $tablename => $dataset){
@@ -214,9 +215,16 @@ class StatementHandler {
                 $valuesStr = implode(", :", $field);
                 $sql .= "($fieldsStr) VALUES (:$valuesStr)";
                 
+                if ($update){
+                    foreach($field as $name){
+                        $p_sql = " ON DUPLICATE UPDATE ";
+                        $p_sql .= "`$field` = VALUES(`$field`), ";
+                    }
+                    $p_sql = substr($p_sql, 0, -2) . ";";
+                }
                 
                 if (!isset($dataset[0])){ //The array is simple, and does not require anything fancy to make the data legit
-                    $this->query($sql, $dataset);
+                    $this->query($sql . $p_sql, $dataset);
                 } else {
                     foreach($dataset as $pairs){
                         $toReplaceArray = array_keys($pairs, 'LAST_INSERT_ID()');
@@ -225,7 +233,7 @@ class StatementHandler {
                             $toReplace = $toReplaceArray[0];
                             $pairs[$toReplace] = $masterKey;
                         }
-                        $this->query($sql, $pairs);
+                        $this->query($sql . $p_sql, $pairs);
                     }
                 }
                 //This is at the end, since you won't ever have to replace a data pair in the lookup table you are referencing ($primarytable)
@@ -237,14 +245,23 @@ class StatementHandler {
             $sql = "INSERT INTO `$tables` ";
             $fieldsStr = '';
             $valuesStr = '';
+            if ($update){
+                $p_sql = " ON DUPLICATE UPDATE ";
+            }
             foreach($data as $field => $value){
                 $fieldsStr .= $field .", ";
                 $valuesStr .= ":". $field .", ";
+                if ($update){
+                    $p_sql .= "`$field` = VALUES(`$field`), ";
+                }
+            }
+            if ($update){
+                $p_sql = substr($p_sql, 0, -2) . ";";
             }
             $fieldsStr = substr($fieldsStr, 0, -2);
             $valuesStr = substr($valuesStr, 0, -2);
             $sql .= "($fieldsStr) VALUES ($valuesStr)";
-            $this->query($sql, $data);
+            $this->query($sql . $p_sql, $data);
         }
         
         $this->commit();

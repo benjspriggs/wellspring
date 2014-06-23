@@ -25,8 +25,8 @@ if ($dbc == true){
         <title>Log in | Wellspring</title>
         <meta charset="utf-8">
             
-        <link rel="stylesheet" type="text/css" href="css/main.css">
-        <link rel="stylesheet" type="text/css" href="css/login.css">
+        <link rel="stylesheet" type="text/css" href="lib/content/css/main.css">
+        <link rel="stylesheet" type="text/css" href="lib/content/css/login.css">
     </head>
     
     <body>

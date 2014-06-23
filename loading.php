@@ -1,23 +1,30 @@
 <?php
 require 'lib/init.php';
 
-switch(Input::get('action')){
-    case("logOut"):
-        require_once 'lib/actions/logOut.php';
-        break;
+if (Token::check(Input::get('token'))){
+    $a = array('logIn', 'verifyEmail', 'registerUser', 'addSong', 'updateSong');
+    if (in_array(Input::get('action'), $a)){
+        require_once 'lib/actions/'. Input::get('action') .'.php';
+    }
+} elseif (Token::check(Input::get('exittoken'))){
+    require_once 'lib/actions/logOut.php';
+} else {
+    echo 'CSRF test failed.<br>';
+}
+
+switch (Input::get('action')){
     case("addSong"):
-        require_once 'lib/actions/addSong.php';
+        echo "<a href=\"write.php\">Return to upload page</a>";
         break;
     case("logIn"):
-        require_once 'lib/actions/logIn.php';
-        break;
     case("verifyEmail"):
-        require_once 'lib/actions/verifyEmail.php';
+        echo "<a href=\"login.php\">Return to login page</a>";
         break;
     case("registerUser"):
-        require_once 'lib/actions/registerUser.php';
+        echo "<a href=\"register.php\">Return to register page</a>";
+        break;
+    default:
+        echo "<a href=\"home.php\">Return to home</a>";
         break;
 }
-echo "<a href=\"home.php\">Home</a>";
-//header("Location: home.php");
 ?>

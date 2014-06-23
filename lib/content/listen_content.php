@@ -1,12 +1,12 @@
 <?php
 require_once('pagination_nav.html');
-if(Input::get('page') != NULL){
+if (Input::get('page') != NULL){
     $page = htmlspecialchars(Input::get('page'));
 } else {
     //Page is unset, first time visiting
     $page = 1;
 }
-if(Input::get('num_res') != NULL){
+if (Input::get('num_res') != NULL){
     $num_res = htmlspecialchars(Input::get('num_res'));
 } else {
     //Num is unset
@@ -20,7 +20,7 @@ $count = $STH->getEstimate('songs_meta', 'song_id');
 $total = ceil(($count/$num_res) + .5);
 echo "Showing page $page of $total. <br>";
 for($a = 1; $a <= $total; $a++){
-    if($a == $page){
+    if ($a == $page){
         echo "$a  ";
     } else {
         echo "<a href=\"listen.php?page=$a&num_res=$num_res\">$a</a>  ";
@@ -44,7 +44,7 @@ foreach($results as $entry => $song){
             echo "uploads/". $song['song_name'] ."/". $song['media_name'] .".". $song['filetype'] . "\"";
             echo ">\n";
         } else {
-            echo "Song['media_name'] was empty.<br>";
+            //Song['media_name'] was empty
             echo "img/noimg.jpg\" />\n";
         }
         

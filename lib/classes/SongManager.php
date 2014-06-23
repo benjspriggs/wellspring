@@ -70,16 +70,17 @@ class SongManager {
                         $path[] = "/uploads/". $song_name ."/";
                         
                         foreach ($path as $key => $name){
-                            $filepath = Config::get('app/root').$path[$key];
-                            if(!is_dir($filepath)){
+                            $filepath = Config::get('root/app') . $path[$key];
+                            if (!is_dir($filepath)){
                                 mkdir($filepath);
                             }
-                            if (move_uploaded_file($files['tmp_name'][$key], $filepath.$uploaded[$key])){
+                            if (move_uploaded_file($files['tmp_name'][$key], $filepath . $uploaded[$key])){
                                     $success_path[] = $path[$key];
                             } else {
                                 $this->_errors[] = "$name was not uploaded successfuly.";
                             }
                         }
+                        return $success_path;
                 } else {
                     $this->_errors[] = "File $name was not stored properly.";
                     switch($files['error'][$key]){
@@ -117,7 +118,7 @@ class SongManager {
     
     private function generateView($view = 'text', $sortby = '', $exclusive = FALSE){
         $this->clearView();
-        if($exclusive){
+        if ($exclusive){
             $exclusive = '';
         } else {
             $exclusive = 'LEFT';
@@ -186,7 +187,7 @@ class SongManager {
         $STH = $this->STH;
         $STH->get('songs_meta', '*', array('song_id' => $song_id), array('song_id', '=', ':song_id'));
         $results = $STH->getResults();
-        if(empty($results)){
+        if (empty($results)){
             return FALSE;
         } else {
             return TRUE;
@@ -205,7 +206,7 @@ class SongManager {
         $tables = array('songs_meta' => array('user_id', 'song_name', 'song_desc', 'lyrics'));
         $data['songs_meta'] = $songData;
         
-        if(!empty($songObj->tags)){
+        if (!empty($songObj->tags)){
             $tagData = array(":tags" => $songObj->tags,
                              ":song_id" => 'LAST_INSERT_ID()',
                              ":user_id" => $user_id);
@@ -213,7 +214,7 @@ class SongManager {
             $data['tags'] = $tagData;
         }
         
-        if(!empty($songObj->embeds)){
+        if (!empty($songObj->embeds)){
             $tables ['embeds']= array('song_id', 'user_id', 'embeds');
             $embedData = array(':song_id' => 'LAST_INSERT_ID()',
                                ':user_id' => $user_id,
@@ -221,7 +222,7 @@ class SongManager {
             $data['embeds'] = $embedData;
         }
         
-        if(!empty($songObj->files)){
+        if (!empty($songObj->files)){
             $tables ['media']= array('song_id', 'user_id', 'media_name', 'filetype');
             foreach($songObj->files['name'] as $index => $name){
                 $fileData = explode(".", $name);
@@ -241,7 +242,7 @@ class SongManager {
     public function deleteSong(Song $songObj){
         $this->_errors = array();
         $user_id = $this->getUserID();
-        if($user_id != 0){
+        if ($user_id != 0){
             $PDO = $this->getConnection();
             $PDO->beginTransaction();
             $song_id = $songObj->songid;
@@ -285,8 +286,8 @@ class SongManager {
         $orderby = $this->getOrderby();
         $join = $this->getJoin();
         //Ask DB for all row that are between the start, num rows, and begin after the page limit
-        if(array_key_exists('num_res', $limits)){
-            if(array_key_exists('page', $limits)){
+        if (array_key_exists('num_res', $limits)){
+            if (array_key_exists('page', $limits)){
                 $pair = array('start' => ($limits['num_res'] * ($limits['page'] -1)), 'end' => ($limits['num_res'] * $limits['page']));
                 $extra = " LIMIT ". $pair['start']. ", ". $limits['num_res'];
                 $resArray = $STH->get($table, $fields, array(), $where, $orderby, $join, $extra)->getResults();
@@ -305,11 +306,26 @@ class SongManager {
         //Return the array of song objects that match the provided limits
     }
     
-    public function updateSong(Song $songObj){
+    //Files has structure of: files=>array( name=>array([0] first name, [1] second name), filetype=>array([0 first filetype, [1] second filetype))
+    //tl;dr the same strucure as a $_FILES array
+    public function updateSong(Song $songObj, array $files, $song_id, $user_id){
         $this->_errors = array();
-        if($user_id != 0){
-            $PDO = $this->getConnection();
-            $PDO->beginTransaction();
+        $STH = $this->STH;
+        if ($user_id != 0){
+            //Insert metadata sans media
+            $tables = array('songs_meta' => array('song_name', 'song_desc', 'lyrics', 'user_id'),
+                            'tags' => array('song_id', 'tags', 'user_id'),
+                            'embeds' => array('song_id', 'embeds', 'user_id'),
+                            'media' => array('song_id', 'media_name', 'filetype', 'user_id'));
+            $data = array('songs_meta' => array('song_name' => $songObj->song_name, 'song_desc' => $songObj->song_desc, 'lyrics' => $songObj->lyrics, 'user_id' => $user_id),
+                            'tags' => array('song_id' => $song_id, 'tags' => $songObj->tags, 'user_id' => $user_id),
+                            'embeds' => array('song_id' => $song_id, 'embeds' => $songObj->embeds, 'user_id' => $user_id),
+                            'media' => array('song_id' => $song_id, 'media_name' => '', 'filetype' => '', 'user_id' => $user_id));
+            $q = $STH->insert($tables = array(), $data = array(), 'songs_meta', 'song_id', TRUE);
+            
+            //Move files
+            //Update media table w/ duplicate true with the successfully uploaded files
+            
             $sth = $PDO->prepare("UPDATE `songs_meta` SET `song_name` = :songname, `song_desc` = :songdesc, `user_id` = :userid, `lyrics` = :lyrics
                                  WHERE `song_id` = :songid;
                                  INSERT INTO `tags` (`song_id`, `tags`) VALUES (`:songid`, `:tags`)
@@ -318,8 +334,6 @@ class SongManager {
                                     ON DUPLICATE UPDATE `song_id` = VALUES(`song_id`), `embeds` = VALUES(`embeds`);
                                  INSERT INTO `media` (`song_id`, `media_name`, `filetype`) VALUES (`:songid`, `:medianame`, `:filetype`)
                                     ON DUPLICATE UPDATE `song_id` = VALUES(`song_id`), `media_name` = VALUES(`media_name`), `filetype` = VALUES(`filetype`);");
-            $sth->execute((array)$songObj);
-            $PDO->commit();
             return $this;
         } else {
             $this->_errors[] = 'Cannot update song from anonymous account.';
