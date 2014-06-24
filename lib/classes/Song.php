@@ -23,12 +23,12 @@ class Song {
         
         ##Song name as string, tags as comma separated list
         private function createTags($song_name, $tags = NULL){
-                $songTags = array();
-                $songTags[] = explode(" ", $song_name);
+                $songNTags = explode(" ", $song_name);
+                $res = implode(", ", $songNTags);
                 if ($tags){
-                        $songTags[] = explode(",", $tags);
+                        $songTags = explode(",", $tags);
+                        $res .= ', '.implode(", ", $songTags);
                 }
-                $res = implode(", ", $songTags);
                 return $res;
         }
         

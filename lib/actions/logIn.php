@@ -26,9 +26,13 @@ if ($validate->passed()){
     $user = new User($STH);
     $result = $STH->get('users', array('salt'), array('username' => $username),array('username', '=', ':username'))->getResults();
     $salt = $result[0]['salt'];
-    echo "Salt is: ".$salt;
     $user->logIn($username, Hash::encode($password, $salt), $remember);
-    $user->getErrors();
+    if ($user->hasErrors()){
+        echo "There was an error logging you in:<br>";
+        $user->getErrors();
+    } else {
+        echo "Logged in successfully!<br>";
+    }
 } else {
     echo 'Validation failed for the following reasons: <br>';
     $validate->errors();

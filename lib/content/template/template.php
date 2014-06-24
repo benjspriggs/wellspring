@@ -3,14 +3,15 @@
     <head>
         <title><?php echo $t->getName();?></title>
         <meta charset="utf-8">
-        <link rel="stylesheet" type="text/css" href="lib/content/css/normalize.css">    
+        <base href="<?=Config::get('root_link/site')?>" />
+        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/normalize.css">    
         <?php
         foreach ($t->getCss() as $file => $name){
-            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"lib/content/css/". $name .".css\">\n";
+            echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::get('root_link/content') ."css/". $name .".css\">\n";
         }
         
         ?>
-        <link rel="stylesheet" type="text/css" href="lib/content/css/header.css">
+        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/header.css">
         <!-- You're going to need a way for the search bar to be checked if it has any data in it -->
         <!-- Don't forget the meta tags, and Google Font API links! -->
         <!-- Link jquery/ external scripts here -->
@@ -19,19 +20,19 @@
     
     <body>
         <div class="page">
-            <?php include_once('lib/content/incl/header.php');?>
+            <?php include_once(Config::get('root/content').'incl/header.php');?>
             <div id="content">
-                <?php $path = $t->getContent(); include_once("lib/content/$path");?>
+                <?php $path = $t->getContent(); include_once(Config::get('root/content'). "$path");?>
             </div>
             <div id="sidebar">
-                <?php include_once('lib/content/incl/updates.html');?>
+                <?php include_once(Config::get('root/content').'incl/updates.html');?>
             </div>
             <div id="footer">
-                <?php include_once('lib/content/incl/footer.html');?>
+                <?php include_once(Config::get('root/content').'incl/footer.html');?>
             </div>
         </div>
     </body>
-    <script type="text/javascript" src="lib/content/js/jquery-1.10.2.js"></script>
+    <script type="text/javascript" src="<?=Config::get('root_link/content')?>js/jquery-1.10.2.js"></script>
         <?php
         if ($t->getJs() != NULL){
             foreach ($t->getJs() as $file => $name){

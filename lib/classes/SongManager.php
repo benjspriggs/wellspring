@@ -80,7 +80,6 @@ class SongManager {
                                 $this->_errors[] = "$name was not uploaded successfuly.";
                             }
                         }
-                        return $success_path;
                 } else {
                     $this->_errors[] = "File $name was not stored properly.";
                     switch($files['error'][$key]){
@@ -197,7 +196,6 @@ class SongManager {
     public function addSong(Song $songObj){
         $this->_errors = array();
         $STH = $this->getHandler();
-        $PDO = $STH->getConnection();
         $user_id = $this->getUserID();
         $songData = array(":user_id" => $user_id,
                           ":song_name" => $songObj->song_name,
@@ -310,8 +308,46 @@ class SongManager {
     //tl;dr the same strucure as a $_FILES array
     public function updateSong(Song $songObj, array $files, $song_id, $user_id){
         $this->_errors = array();
-        $STH = $this->STH;
         if ($user_id != 0){
+            $STH = $this->getHandler();
+            $songData = array(":user_id" => $user_id,
+                              ":song_name" => $songObj->song_name,
+                              ":song_desc" => $songObj->song_desc,
+                              ":lyrics" => $songObj->lyrics);
+            $tables = array('songs_meta' => array('user_id', 'song_name', 'song_desc', 'lyrics'));
+            $data['songs_meta'] = $songData;
+            
+            if (!empty($songObj->tags)){
+                $tagData = array(":tags" => $songObj->tags,
+                                 ":song_id" => 'LAST_INSERT_ID()',
+                                 ":user_id" => $user_id);
+                $tables['tags'] = array('song_id', 'user_id', 'tags');
+                $data['tags'] = $tagData;
+            }
+            
+            if (!empty($songObj->embeds)){
+                $tables ['embeds']= array('song_id', 'user_id', 'embeds');
+                $embedData = array(':song_id' => 'LAST_INSERT_ID()',
+                                   ':user_id' => $user_id,
+                                   ':embeds' => $songObj->embeds);
+                $data['embeds'] = $embedData;
+            }
+            
+            if (!empty($songObj->files)){
+                $tables ['media']= array('song_id', 'user_id', 'media_name', 'filetype');
+                foreach($songObj->files['name'] as $index => $name){
+                    $fileData = explode(".", $name);
+                    $filetype = end($fileData);
+                    $filename = $fileData[0];
+                    $mediaData = array(':song_id' => 'LAST_INSERT_ID()',
+                                       ':user_id' => $user_id,
+                                       ':media_name' => $filename,
+                                       ':filetype' => $filetype);
+                    $data['media'][] = $mediaData;
+                }
+            }
+            $STH->insert($tables, $data, 'songs_meta', 'song_id');
+            return $this;
             //Insert metadata sans media
             $tables = array('songs_meta' => array('song_name', 'song_desc', 'lyrics', 'user_id'),
                             'tags' => array('song_id', 'tags', 'user_id'),

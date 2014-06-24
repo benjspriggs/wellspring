@@ -105,9 +105,9 @@ class StatementHandler {
             /*
              *Debug
              */
-            //echo "SQL is:".$sql."<br>";
-            //echo "Values are:<br>";
-            //var_dump($values);
+            echo "SQL is:".$sql."<br>";
+            echo "Values are:<br>";
+            var_dump($values);
             if (!empty($values)){
                 $sth->execute($values);
                 $this->_count = $sth->rowCount();
@@ -205,6 +205,7 @@ class StatementHandler {
         $this->clearErrors();
         $this->begin();
         $p_sql = '';
+        $masterKey = NULL;
         //Used a foreach loop in order to keep the LAST_INSERT_ID() functionality of PDO
         if (is_array($tables)){
             foreach($data as $tablename => $dataset){
@@ -224,14 +225,27 @@ class StatementHandler {
                 }
                 
                 if (!isset($dataset[0])){ //The array is simple, and does not require anything fancy to make the data legit
+                    if ($masterKey != NULL){
+                        $toReplaceArray = array_keys($dataset, "LAST_INSERT_ID()", true);
+                        var_dump($toReplaceArray);
+                        echo "<br>And the master key is:<br>".$masterKey;
+                        if (!empty($toReplaceArray)){
+                                $toReplace = $toReplaceArray[0];
+                                $dataset[$toReplace] = $masterKey;
+                        }
+                    }
+                    
                     $this->query($sql . $p_sql, $dataset);
                 } else {
                     foreach($dataset as $pairs){
-                        $toReplaceArray = array_keys($pairs, 'LAST_INSERT_ID()');
-                        
-                        if (!empty($toReplaceArray)){
-                            $toReplace = $toReplaceArray[0];
-                            $pairs[$toReplace] = $masterKey;
+                        if ($masterKey != NULL){
+                            $toReplaceArray = array_keys($pairs, "LAST_INSERT_ID()", true);
+                            var_dump($toReplaceArray);
+                            echo "<br>And the master key is:<br>".$masterKey;
+                            if (!empty($toReplaceArray)){
+                                $toReplace = $toReplaceArray[0];
+                                $pairs[$toReplace] = $masterKey;
+                            }
                         }
                         $this->query($sql . $p_sql, $pairs);
                     }
@@ -239,6 +253,8 @@ class StatementHandler {
                 //This is at the end, since you won't ever have to replace a data pair in the lookup table you are referencing ($primarytable)
                 if ($tablename == $primarytable){
                     $masterKey = $this->getConnection()->lastInsertId($primarytable .".". $keyname);
+                    $this->commit(); //Since the foriegn keys need a reference, there is a commit here
+                    $this->begin();
                 }
             }
         } else {

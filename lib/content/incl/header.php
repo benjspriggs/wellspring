@@ -1,13 +1,14 @@
 <?php
 if (Session::exists(Config::get('session/session_name'))){
-    $login = "Welcome, ";
-    $login .= Session::get(Config::get('session/username')). "!   ";
-    //Echo a href that will log the user out
-    $login .= "<a href=\"loading.php?user_id=";
     $STH = new StatementHandler($PDO);
     $user = new User($STH);
-    $id = $user->getUserID(Session::get(Config::get('session/username')));
-    $token = Token::csrf();
+    $id = $user->getUserID(Session::get('username'));
+    $login = "Welcome, ";
+    $login .= Session::get('username'). "!   ";
+    //Echo a href that will log the user out
+    $login .= "<a href=\"loading.php?user_id=";
+    
+    $token = Token::exittoken();
     $login .= $id ."&action=logOut&exittoken=$token\">Log out</a>";
 } else {
     $login = "<a href=\"login.php\">Login/ Register</a>";

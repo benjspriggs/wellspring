@@ -20,8 +20,8 @@ $items = array('song_name' => array(
 $validate->check($source, $items);
 if ($validate->passed()){
     $user = new User($STH);
-    if (Session::exists(Config::get('session/username'))){
-        $user_id = $user->getUserID(Session::get(Config::get('session/username')));
+    if ($user->isLoggedIn(Session::get('uid')) >= 2 && Session::exists('uid')){ //If the user is logged in, and they are the logged in user
+        $user_id = Session::get('uid');
     } else {
         $user_id = 0;
     }

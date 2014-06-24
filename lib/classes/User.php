@@ -29,11 +29,21 @@ class User {
         $this->_errors = array();
     }
     
+    public function hasErrors(){
+        if (!empty($this->_errors)){
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
     public function getErrors(){
         if (!empty($this->_errors)){
             foreach($this->_errors as $errorkey => $text){
                 echo $text ."<br>";
             }
+        } else {
+            return NULL;
         }
     }
     
@@ -155,8 +165,6 @@ class User {
                     return $this;
                 } else {
                     $this->_errors[] = "The hashes did not match.";
-                    echo "DB hash is:$dbhash<br>";
-                    echo "Password is:$password<br>";
                 }
             } else {
                 $this->_errors[] = "The information passed was not valid.";

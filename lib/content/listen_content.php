@@ -37,7 +37,7 @@ foreach($results as $entry => $song){
         echo "<div class=\"clicky\" id=\"clicky$i\"></div>";
         
         echo "<h4 id=\"title\">";
-            echo "<a href=\"song.php?song_id=". $song['song_id'] ."\">". $song['song_name']. "</a>";
+            echo "<a href=\"song/view.php?song_id=". $song['song_id'] ."\">". $song['song_name']. "</a>";
         echo "</h4>\n";
         echo "<img src=\"";
         if (!empty($song['media_name'])){
