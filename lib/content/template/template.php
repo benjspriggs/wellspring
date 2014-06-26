@@ -1,3 +1,4 @@
+<?=require_once('lib/actions/userIsLoggedin.php');?>
 <!DOCTYPE html>
 <html lang="en-us">
     <head>

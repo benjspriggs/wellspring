@@ -1,15 +1,10 @@
 <?php
-$STH = new StatementHandler($PDO);
-$user = new User($STH);
-$id = Session::get('uid');
-
-if ($user->isLoggedin($id)){
+if ($a){
+    $token = Token::exittoken();
     $login = "Welcome, ";
     $login .= Session::get('username'). "!   ";
     //Echo a href that will log the user out
     $login .= "<a href=\"loading.php?user_id=";
-    
-    $token = Token::exittoken();
     $login .= $id ."&action=logOut&exittoken=$token\">Log out</a>";
 } else {
     $login = "<a href=\"login.php\">Login/ Register</a>";

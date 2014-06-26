@@ -2,7 +2,6 @@
 require_once('../lib/init.php');
 $STH = new StatementHandler($PDO);
 $s = new SongManager($STH);
-//Find a way to check that a song exists
 $i = Input::get('song_id');
 $check = $s->exists($i);
 if ($check){

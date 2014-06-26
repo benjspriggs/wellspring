@@ -19,6 +19,7 @@ $embeds = $r['embeds'];
             <textarea name="desc" id="desc" placeholder="Song description"><?=$desc?></textarea><br>
             <input name="tags" id="tags" value="<?=$tags?>" placeholder="Tags"><br>
             <input name="embeds" id="embeds" value="<?=$embeds?>" placeholder="Embeds and links"><br>
+            <input name="sfile[]" id="sfile[]" multiple>
         </ul>
         <div id="submit">
             <input type="submit" name="submit" value="Update">

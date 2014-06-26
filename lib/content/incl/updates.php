@@ -1,3 +1,11 @@
+<?php
+//Check for songs
+
+//Check for groups
+
+//Check for annoucements
+?>
+
 <div class="updates">
   <!-- All of the updates will be inserted via AJAX in <p> tags,separated by div tags -->
   <div id="update1">
