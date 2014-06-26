@@ -6,16 +6,12 @@ $s = new SongManager($STH);
 $i = Input::get('song_id');
 $check = $s->exists($i);
 if ($check){
-    $array = $s->viewSong(escape(Input::get('song_id')));
-    $view = $array;
-    $t = new Template($view['song_name']. " | Song View", array('main', 'view'), 'view_content.php', array('view'));
+    $view = $s->viewSong(escape(Input::get('song_id')));
+    $t = new Template($view['song_name']. " | Song View", array('main', 'song'), 'view_song_content.php', array('view'));
     require_once(Config::get('root/content') . 'template/view_template.php');
 } else {
-    $view = array('song_name' => '404');
     Input::put('resource', 'song');
-    $t = new Template($view['song_name']. " | Song View", array('main', 'view'), 'errors/404.php', array('view'));
+    $t = new Template("404 | Song View", array('main'), 'errors/404.php', array('view'));
     require_once(Config::get('root/content') . 'template/view_template.php');
 }
-
-
 ?>

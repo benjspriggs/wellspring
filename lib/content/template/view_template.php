@@ -26,7 +26,7 @@
                 <?php $path = $t->getContent(); include_once(Config::get('root/content')."$path");?>
             </div>
             <div id="sidebar">
-                <?php include_once(Config::get('root/content').'incl/updates.html');?>
+                <?php include_once(Config::get('root/content').'incl/updates.php');?>
             </div>
             <div id="footer">
                 <?php include_once(Config::get('root/content').'incl/footer.html');?>

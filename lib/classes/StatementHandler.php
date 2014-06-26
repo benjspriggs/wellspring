@@ -105,9 +105,9 @@ class StatementHandler {
             /*
              *Debug
              */
-            echo "SQL is:".$sql."<br>";
-            echo "Values are:<br>";
-            var_dump($values);
+            //echo "SQL is:".$sql."<br>";
+            //echo "Values are:<br>";
+            //var_dump($values);
             if (!empty($values)){
                 $sth->execute($values);
                 $this->_count = $sth->rowCount();
@@ -217,9 +217,9 @@ class StatementHandler {
                 $sql .= "($fieldsStr) VALUES (:$valuesStr)";
                 
                 if ($update){
-                    foreach($field as $name){
-                        $p_sql = " ON DUPLICATE UPDATE ";
-                        $p_sql .= "`$field` = VALUES(`$field`), ";
+                    $p_sql = " ON DUPLICATE KEY UPDATE ";
+                    foreach($field as $index => $name){
+                        $p_sql .= "$name = VALUES($name), ";
                     }
                     $p_sql = substr($p_sql, 0, -2) . ";";
                 }
@@ -227,8 +227,6 @@ class StatementHandler {
                 if (!isset($dataset[0])){ //The array is simple, and does not require anything fancy to make the data legit
                     if ($masterKey != NULL){
                         $toReplaceArray = array_keys($dataset, "LAST_INSERT_ID()", true);
-                        var_dump($toReplaceArray);
-                        echo "<br>And the master key is:<br>".$masterKey;
                         if (!empty($toReplaceArray)){
                                 $toReplace = $toReplaceArray[0];
                                 $dataset[$toReplace] = $masterKey;

@@ -1,4 +1,4 @@
 <?php
 $resource = Input::get('resource');
-echo "We're sorry, but that $resource doesn't exist.";
+echo "We're sorry, but that $resource doesn't exist in our records.";
 ?>

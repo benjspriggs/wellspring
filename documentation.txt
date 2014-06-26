@@ -1,0 +1,27 @@
+CHECK FOR CONSISTENCY OF DESIGN
+CHECK FOR FALLBACKS FOR NEW TECH
+
+TODO:
+-Edit songs (files?)
+
+
+-Create groups
+-Delete groups
+-Modify groups
+
+-Users page
+=Edit users
+
+-AJAX updates on side
+
+=Annoucement system
+-Copyright info
+
+~~~ After app-related things are done~~~
+-Visual design for groups
+-Visual design for modify users/ view users page
+-Visual design for view songs/edit functionality
+-Search
+-jQuery form update
+
+-Fallbacks for video, audio

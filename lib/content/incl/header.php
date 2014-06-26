@@ -1,8 +1,9 @@
 <?php
-if (Session::exists(Config::get('session/session_name'))){
-    $STH = new StatementHandler($PDO);
-    $user = new User($STH);
-    $id = $user->getUserID(Session::get('username'));
+$STH = new StatementHandler($PDO);
+$user = new User($STH);
+$id = Session::get('uid');
+
+if ($user->isLoggedin($id)){
     $login = "Welcome, ";
     $login .= Session::get('username'). "!   ";
     //Echo a href that will log the user out
