@@ -1,6 +1,7 @@
 <?php
 require_once('../lib/init.php');
-require_once('../lib/actions/userIsLoggedin.php');
+
+require_once('../lib/checks/accepted.php');
 $STH = new StatementHandler($PDO);
 $s = new SongManager($STH);
 $i = Input::get('song_id');

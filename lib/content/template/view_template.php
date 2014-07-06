@@ -1,3 +1,4 @@
+<?=require_once('../lib/checks/accepted.php');?>
 <!DOCTYPE html>
 <html lang="en-us">
     <head>

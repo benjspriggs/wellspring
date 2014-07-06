@@ -36,7 +36,12 @@ class StatementHandler {
     }
     
     public function getResults(){
-        return $this->_results;
+        if ($this->_results){
+            return $this->_results;
+        } else {
+            return NULL;
+        }
+
     }
     
     public function getEstimate($table, $row){

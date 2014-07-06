@@ -3,6 +3,7 @@ if ($a){
     $token = Token::exittoken();
     $login = "Welcome, ";
     $login .= Session::get('username'). "!   ";
+    $id = Session::get('uid');
     //Echo a href that will log the user out
     $login .= "<a href=\"loading.php?user_id=";
     $login .= $id ."&action=logOut&exittoken=$token\">Log out</a>";

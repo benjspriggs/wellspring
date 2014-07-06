@@ -1,7 +1,8 @@
 <?php
 $STH = new StatementHandler($PDO);
 $SM = new SongManager($STH);
-$song = $SM->viewSong(Input::get('song_id'), 'text_extended');
+$song = $SM->viewSong(Input::get('song_id'), 'full');
+var_dump($song);
 if (isset($song['tags'])){
     $tags = $song['tags'];
 } else {

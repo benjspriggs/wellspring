@@ -67,10 +67,10 @@ class SongManager {
         foreach ($files['name'] as $key => $name){
                 if ($files['error'][$key] == 0){
                         $uploaded[] = $name;
-                        $path[] = "/uploads/". $song_name ."/";
+                        $path[] = $song_name ."/";
                         
                         foreach ($path as $key => $name){
-                            $filepath = Config::get('root/app') . $path[$key];
+                            $filepath = Config::get('root/uploads') . $path[$key];
                             if (!is_dir($filepath)){
                                 mkdir($filepath);
                             }

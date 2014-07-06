@@ -1,4 +1,4 @@
-<?=require_once('lib/actions/userIsLoggedin.php');?>
+<?=require_once(Config::get('root/lib').'checks/loggedin.php');?>
 <!DOCTYPE html>
 <html lang="en-us">
     <head>

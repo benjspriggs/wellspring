@@ -115,6 +115,32 @@ class User {
         }
     }
     
+    public function isAdmin($userid){
+        $this->clearErrors();
+        $STH = $this->STH;
+        $res = $STH->get('users', array('is_admin'), array('user_id' => $userid), array('user_id', '=', ':user_id'))->getResults();
+        if ($res[0]['is_admin'] == 1){
+            return TRUE;
+        } elseif ($res[0]['is_admin'] == 0) {
+            return FALSE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    //public function status($userid, $condition){
+    //    $this->clearErrors();
+    //    $STH = $this->STH;
+    //    $res = $STH->get('users', array('is_'. $condition), array('user_id' => $userid), array('user_id', '=', ':user_id'))->getResults();
+    //    if ($res[0]['is_'.$condition] == 1){
+    //        return TRUE;
+    //    } elseif ($res[0]['is_'. $condition] == 0) {
+    //        return FALSE;
+    //    } else {
+    //        return FALSE;
+    //    }
+    //}
+    
     public function getUserID($username){
         $this->clearErrors();
         $STH = $this->STH;

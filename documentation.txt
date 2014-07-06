@@ -1,6 +1,9 @@
 CHECK FOR CONSISTENCY OF DESIGN
 CHECK FOR FALLBACKS FOR NEW TECH
 
+Check the number of tokens w/ PDO. It's possible you'll also need to have a separate media query when viewing files. You just need to get that done, then you'll have the uploading thing ready!
+Then on to groups!
+
 TODO:
 -Edit songs (files?)
 
