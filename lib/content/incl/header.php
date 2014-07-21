@@ -1,5 +1,5 @@
 <?php
-if ($a){
+if ($logged){
     $token = Token::exittoken();
     $login = "Welcome, ";
     $login .= Session::get('username'). "!   ";

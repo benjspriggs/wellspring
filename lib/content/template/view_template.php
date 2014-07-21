@@ -1,4 +1,9 @@
-<?=require_once('../lib/checks/accepted.php');?>
+<?php
+ob_start();
+require_once(Config::get('root/lib').'checks/loggedin.php');
+require_once(Config::get('root/lib').'checks/accepted.php');
+ob_flush();
+?>
 <!DOCTYPE html>
 <html lang="en-us">
     <head>
@@ -17,7 +22,11 @@
         <!-- Don't forget the meta tags, and Google Font API links! -->
         <!-- Link jquery/ external scripts here -->
         <!-- Favicon info, make sure to name the .ico file favicon.ico for IE6 peeps -->
-        <meta name="description" content="<?php echo $view->songdesc;?>">
+        <?php
+        if (!empty($view->songdesc)){
+            echo "<meta name=\"description\" content=\"". $view->songdesc ."\">";
+        }
+        ?>
     </head>
     
     <body>

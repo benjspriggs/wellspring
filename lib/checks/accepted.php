@@ -1,7 +1,7 @@
 <?php
 $STH = new StatementHandler($PDO);
 $u = new User($STH);
-$l = Session::get('uid');
-$a = $u->isAccepted($l);
+$uid = Session::get('uid');
+$a = $u->isAccepted($uid);
 return $a;
 ?>

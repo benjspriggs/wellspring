@@ -2,7 +2,8 @@
 $STH = new StatementHandler($PDO);
 $SM = new SongManager($STH);
 $song = $SM->viewSong(Input::get('song_id'), 'full');
-var_dump($song);
+$test = $SM->viewSong(Input::get('song_id'), 'media');
+var_dump($test);
 if (isset($song['tags'])){
     $tags = $song['tags'];
 } else {
@@ -16,7 +17,11 @@ if (isset($song['embeds'])){
 
 ?>
 <h2 id="song_name"><?=$song['song_name']?></h2>
-<a href="song/edit.php?song_id=<?=Input::get('song_id')?>">Edit</a>
+<?php
+if ($a){
+    echo "<a href=\"song/edit.php?song_id=". Input::get('song_id') ."\">Edit</a>";
+}
+?>
 <article>
     <p id="lyrics"><?=$song['lyrics']?></p>
     <p id="song_desc"><?=$song['song_desc']?></p>

@@ -1,4 +1,8 @@
-<?=require_once(Config::get('root/lib').'checks/loggedin.php');?>
+<?php
+ob_start();
+require_once(Config::get('root/lib').'checks/loggedin.php');
+ob_flush();
+?>
 <!DOCTYPE html>
 <html lang="en-us">
     <head>

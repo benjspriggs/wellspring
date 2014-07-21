@@ -1,11 +1,11 @@
 <?php
 $STH = new StatementHandler($PDO);
 $u = new User($STH);
-$l = Session::get('uid');
-if ($u->isLoggedin($l) >= 2){
-    $a = TRUE;
+$uid = Session::get('uid');
+if ($u->isLoggedin($uid) >= 2){
+    $logged = TRUE;
 } else {
-    $a = FALSE;
+    $logged = FALSE;
 }
-return $a;
+return $logged;
 ?>

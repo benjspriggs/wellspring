@@ -69,13 +69,13 @@ class SongManager {
                         $uploaded[] = $name;
                         $path[] = $song_name ."/";
                         
-                        foreach ($path as $key => $name){
-                            $filepath = Config::get('root/uploads') . $path[$key];
+                        foreach ($path as $key => $filename){
+                            $filepath = Config::get('root/uploads') . $filename;
                             if (!is_dir($filepath)){
                                 mkdir($filepath);
                             }
                             if (move_uploaded_file($files['tmp_name'][$key], $filepath . $uploaded[$key])){
-                                    $success_path[] = $path[$key];
+                                    $success_path[] = $filename;
                             } else {
                                 $this->_errors[] = "$name was not uploaded successfuly.";
                             }
@@ -128,7 +128,7 @@ class SongManager {
                 $this->_where = array('song_id', '=', ':song_id');
                 $this->_join = array();
                 break;
-            case ('text_extended'):
+            case ('full'):
                 $this->_fields = array('song_name', 'song_desc', 'lyrics', 'postdate', 'timestamp', 'song_id');
                 $this->_where = array('songs_meta.song_id', '=', ':song_id');
                 $this->_join = array(array('join_table' => 'tags',
@@ -140,26 +140,10 @@ class SongManager {
                                             'join_key' => 'embeds.song_id',
                                             'fields' => array('embeds')), 'type' => $exclusive);
                 break;
-            case ('full'):
-                $this->_fields = array('song_name', 'song_desc', 'lyrics', 'postdate', 'timestamp', 'song_id');
-                $this->_where = array('songs_meta.song_id', '=', ':song_id');
-                $this->_join = array(array('join_table' => 'tags',
-                                           'primary_key' => 'songs_meta.song_id',
-                                           'join_key' => 'tags.song_id',
-                                           'fields' => array('tags')),
-                                     array('join_table' => 'embeds',
-                                           'primary_key' => 'songs_meta.song_id',
-                                           'join_key' => 'embeds.song_id',
-                                           'fields' => array('embeds')),
-                                     array('join_table' => 'media',
-                                           'primary_key' => 'songs_meta.song_id',
-                                           'join_key' => 'media.song_id',
-                                           'fields' => array('media_name', 'filetype')), 'type' => $exclusive);
-                break;
             case ('media'):
-                $this->_fields = array('song_name', 'song_desc', 'lyrics', 'song_id', 'songs_meta.song_id');
-                $this->_where = array('songs.meta.song_id', '=', ':song_id');
-                $this->_join = array(array('join_table' => 'media', 'primary_key' => 'songs_meta.song_id', 'join_key' => 'media.song_id', 'fields' => array('media_name', 'filetype')), 'type' => $exclusive);
+                $this->_fields = array('media_name', 'filetype', 'media_id');
+                $this->_where = array('media.song_id', '=', ':song_id');
+                $this->_join = array();
                 break;
             default:
                 return $this;
@@ -266,12 +250,17 @@ class SongManager {
         $this->_errors = array();
         $STH = $this->getHandler();
         $this->generateView($view, $sortby, FALSE);
+        if ($view == 'media'){
+            $table = 'media';
+        } else {
+            $table = 'songs_meta';
+        }
         $fields = $this->getFields();
         $where = $this->getWhere();
         $orderby = $this->getOrderBy();
         $join = $this->getJoin();
         $values = array(':song_id' => $song_id);
-        $STH->get('songs_meta', $fields, $values, $where, $orderby, $join);
+        $STH->get($table, $fields, $values, $where, $orderby, $join);
         $results = $STH->getResults();
         return $results[0];
     }

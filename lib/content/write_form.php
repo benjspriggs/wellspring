@@ -9,7 +9,7 @@
         </fieldset>
         <fieldset>
         <?php
-        if ($a){
+        if ($logged){
             echo "<li><label for=\"sheet_music\">Sheet music, video performances:</label><input type=\"file\" name=\"sfile[]\" id=\"sfile\" multiple></li><br>";
         } else {
             echo "<li>You'll need to log in in order to upload a file. You can log in <a href=\"login.php\">here</a>.</li><br>";
