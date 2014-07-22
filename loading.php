@@ -2,7 +2,7 @@
 require 'lib/init.php';
 
 if (Token::check(Input::get('token'))){
-    $a = array('logIn', 'verifyEmail', 'registerUser', 'addSong', 'updateSong');
+    $a = array('logIn', 'verifyEmail', 'registerUser', 'addSong', 'updateSong', 'deleteSong');
     if (in_array(Input::get('action'), $a)){
         require_once 'lib/actions/'. Input::get('action') .'.php';
     }

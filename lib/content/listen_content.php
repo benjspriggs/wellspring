@@ -40,9 +40,17 @@ foreach($results as $entry => $song){
             echo "<a href=\"song/view.php?song_id=". $song['song_id'] ."\">". $song['song_name']. "</a>";
         echo "</h4>\n";
         echo "<img src=\"";
-        if (!empty($song['media_name'])){
-            echo "uploads/". $song['song_name'] ."/". $song['media_name'] .".". $song['filetype'] . "\"";
-            echo ">\n";
+        if ($SM->hasMedia(intval($song['song_id']))){
+            $media = $SM->viewSong($song['song_id'], 'media');
+            if (is_array($media[0])){
+                $piece = $media[0];
+                echo "uploads/". $song['song_name'] ."/". $piece['media_name'] .".". $piece['filetype'] . "\"";
+                echo ">\n";
+            } else {
+                echo "uploads/". $song['song_name'] ."/". $media['media_name'] .".". $media['filetype'] . "\"";
+                echo ">\n";
+            }
+            
         } else {
             //Song['media_name'] was empty
             echo "img/noimg.jpg\" />\n";

@@ -9,6 +9,7 @@ $desc = $r['song_desc'];
 $lyrics = $r['lyrics'];
 $tags = $r['tags'];
 $embeds = $r['embeds'];
+$token = Token::csrf();
 ?>
 <div id="editcont">
     <h3>Edit song <?=$name?></h3>
@@ -25,7 +26,15 @@ $embeds = $r['embeds'];
             <input type="submit" name="submit" value="Update">
         </div>
         <input type="hidden" id="info" name="info" value="<?=htmlspecialchars(json_encode($r))?>">
-        <input type="hidden" id="token" name="token" value="<?=Token::csrf();?>">
-        <input id="action" name="action" value="updateSong" type="hidden">
+        <input type="hidden" id="token" name="token" value="<?=$token?>">
+        <input type="hidden" id="action" name="action" value="updateSong">
+    </form>
+    <form id="deleteform" action="loading.php" method="POST">
+        <div id="delete">
+            <input type="submit" name="delte" value="Delete Song">
+            <input type="hidden" id="info" name="info" value="<?=htmlspecialchars(json_encode($r))?>">
+            <input type="hidden" id="action" name="action" value="deleteSong">
+            <input type="hidden" id="token" name="token" value="<?=$token?>">
+        </div>
     </form>
 </div>

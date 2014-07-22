@@ -32,7 +32,13 @@ class StatementHandler {
     }
     
     public function getErrors(){
-        return $this->_errors;
+        if (!empty($this->_errors)){
+            foreach($this->_errors as $key => $msg){
+                echo $msg ."<br>";
+            }
+        } else {
+            return NULL;
+        }
     }
     
     public function getResults(){
@@ -41,7 +47,6 @@ class StatementHandler {
         } else {
             return NULL;
         }
-
     }
     
     public function getEstimate($table, $row){
@@ -148,6 +153,8 @@ class StatementHandler {
         
         if ($fields === '*'){
             $sql .= $fields;
+        } elseif (is_string($fields)) {
+            $sql .= "`". $fields ."`";
         } else {
             foreach($fields as $field){
                 $sql .= "`$table`.`$field`, ";

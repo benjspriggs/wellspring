@@ -177,6 +177,18 @@ class SongManager {
         }
     }
     
+    public function hasMedia($song_id){
+        $this->_errors = array();
+        $STH = $this->STH;
+        $STH->get('media', 'media_id', array('song_id' => $song_id), array('song_id', '=', ':song_id'));
+        $results = $STH->getResults();
+        if (empty($results)){
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
     public function addSong(Song $songObj){
         $this->_errors = array();
         $STH = $this->getHandler();
@@ -191,16 +203,16 @@ class SongManager {
         $data['songs_meta'] = $songData;
         
         if (!empty($songObj->tags)){
+            $tables['tags'] = array('song_id', 'user_id', 'tags', 'postdate');
             $tagData = array(":tags" => $songObj->tags,
                              ":song_id" => 'LAST_INSERT_ID()',
                              ":user_id" => $user_id,
                              ":postdate" => $date);
-            $tables['tags'] = array('song_id', 'user_id', 'tags');
             $data['tags'] = $tagData;
         }
         
         if (!empty($songObj->embeds)){
-            $tables['embeds']= array('song_id', 'user_id', 'embeds');
+            $tables['embeds']= array('song_id', 'user_id', 'embeds', 'postdate');
             $embedData = array(':song_id' => 'LAST_INSERT_ID()',
                                ':user_id' => $user_id,
                                ':embeds' => $songObj->embeds,
@@ -225,20 +237,12 @@ class SongManager {
         return $this;
     }
 
-    public function deleteSong(Song $songObj){
+    public function deleteSong($song_id, $user_id){
         $this->_errors = array();
-        $user_id = $this->getUserID();
-        if ($user_id != 0){
-            $PDO = $this->getConnection();
-            $PDO->beginTransaction();
-            $song_id = $songObj->songid;
-            $sql .= "DELETE FROM songs_meta WHERE (song_id = $song_id);";
-            $sql .= "DELETE FROM tags WHERE (song_id = $song_id);";
-            $sql .= "DELETE FROM media WHERE (song_id = $song_id);";
-            $sql .= "DELETE FROM embeds WHERE (song_id = $song_id);";
-            $STH = $PDO->prepare($sql);
-            $STH->execute();
-            $PDO->commit();
+        if ($user_id > 0){
+            $STH = $this->getHandler();
+            $STH->delete('songs_meta', array(':song_id' => $song_id), array('song_id', '=', ':song_id'));
+            $STH->getErrors();
             return $this;
         } else {
             $this->_errors[] = 'Cannot delete song from anonymous account.';
@@ -262,7 +266,11 @@ class SongManager {
         $values = array(':song_id' => $song_id);
         $STH->get($table, $fields, $values, $where, $orderby, $join);
         $results = $STH->getResults();
-        return $results[0];
+        if (count($results) == 1){
+            return $results[0];
+        } else {
+            return $results;
+        }
     }
     
     ##Limits array: Start (min), Num_res (max), Page (default 1)

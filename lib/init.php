@@ -1,9 +1,10 @@
 <?php
+
 //session_save_path('/hermes/bosnaweb04b/b1942/ipw.spricoco/phpsessions');
 
 $fp = dirname(__FILE__);
 require_once $fp . '/database.php';
-include_once $fp . '/functions.php';
+require_once $fp . '/functions.php';
 require_once $fp . '/config.php';
 
 spl_autoload_register(function($class){
