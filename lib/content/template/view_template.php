@@ -20,7 +20,6 @@ ob_flush();
         <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/header.css">
         <!-- You're going to need a way for the search bar to be checked if it has any data in it -->
         <!-- Don't forget the meta tags, and Google Font API links! -->
-        <!-- Link jquery/ external scripts here -->
         <!-- Favicon info, make sure to name the .ico file favicon.ico for IE6 peeps -->
         <?php
         if (!empty($view->songdesc)){

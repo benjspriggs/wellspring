@@ -1,8 +1,8 @@
 CHECK FOR CONSISTENCY OF DESIGN
 CHECK FOR FALLBACKS FOR NEW TECH
 
-Check the number of tokens w/ PDO. It's possible you'll also need to have a separate media query when viewing files. You just need to get that done, then you'll have the uploading thing ready!
-Then on to groups!
+How will users add, edit, and remove images with songs?
+What will groups look like? How will they be edited? How will they be created, destoryed, viewed, and edited?
 
 TODO:
 -Edit songs (files?)
