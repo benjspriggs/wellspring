@@ -138,7 +138,8 @@ class SongManager {
                                      array('join_table' => 'embeds',
                                             'primary_key' => 'songs_meta.song_id',
                                             'join_key' => 'embeds.song_id',
-                                            'fields' => array('embeds')), 'type' => $exclusive);
+                                            'fields' => array('embeds')),
+                                     'type' => $exclusive);
                 break;
             case ('media'):
                 $this->_fields = array('media_name', 'filetype', 'media_id');
@@ -165,10 +166,17 @@ class SongManager {
         }
     }
     
-    public function exists($song_id){
+    public function exists($id, $type = 'song'){
         $this->_errors = array();
-        $STH = $this->STH;
-        $STH->get('songs_meta', '*', array('song_id' => $song_id), array('song_id', '=', ':song_id'));
+        $STH = $this->getHandler();
+        switch ($type){
+            case('song'):
+                $STH->get('songs_meta', '*', array('song_id' => $id), array('song_id', '=', ':song_id'));
+                break;
+            case('group'):
+                $STH->get('groups', '*', array('group_id' => $id), array('group_id', '=', ':group_id'));
+                break;
+        }
         $results = $STH->getResults();
         if (empty($results)){
             return FALSE;
@@ -362,33 +370,69 @@ class SongManager {
     
     ##Creates a new grouping of Songs
     ##1 - Album, 2 - compilation
-    public function newGroup($song_id, $type, $name){
+    public function newGroup(array $song_id, $type, $name, $desc, $pTable = 'groups', $pKey = 'group_id'){
         $this->_errors = array();
-        $PDO = $this->getConnection();
-        $PDO->beginTransaction();
-        $sth = $PDO->prepare('INSERT INTO groups_lookup (\'group_name\', \':type\') VALUES (\':group_name\', \':type\');');
-        $dsth = $PDO->prepare('INSERT INTO groups (\'group_id\', \'song_id\') VALUES (LAST_INSERT_ID(), \':song_id\');');//group_id is autoincrement
+        $STH = $this->getHandler();
+        $user_id = $this->getUserID();
+        $tables = array('groups' => array('group_name', 'group_desc', 'type', 'user_id'),
+                        'groups_lookup' => array('group_id', 'song_id', 'user_id')); //List of tables to insert (make sure lookup table is first)
+        $groupData = array(':group_name' => $name, ':group_desc' => $desc, ':type' => $type, ':user_id' => $user_id); //IDs and group ids and stuff
+        $data['groups'] = $groupData;
         
-        $data = array(
-            'song_id' => $song_id,
-            'type' => $type,
-            'group_name' => $name
-        );
-        foreach ($data['song_id'] as $key => $song_id){
-            $dsth->execute($data['song_id'][$song_id]);
-            $sth->execute();
+        foreach ($song_id as $index => $id){
+            $data['groups_lookup'][] = array(':group_id' => 'LAST_INSERT_ID()', ':song_id' => $id, ':user_id' => $user_id);
         }
-        $PDO->commit();
+        
+        $STH->insert($tables, $data, $pTable, $pKey);
         return $this;
     }
-    public function destroyGroup(){
+    public function destroyGroup($group_id, $table = 'groups'){
+        $this->_errors = array();
+        $STH = $this->getHandler();
+        $where = array('group_id', '=', $group_id);
+        $STH->delete($table, NULL, $where);
+        return $this;
+    }
+    
+    ##Returns name, description, and list of song IDs that are in the specified song
+    public function viewGroup($group_id, $members = FALSE, $songIdOnly = TRUE){
+        $this->_errors = array();
+        $STH = $this->getHandler();
+        //Get info from groups
+        $table = 'groups';
+        $fields = '*';
+        $values = array(':group_id' => $group_id);
+        $where = array('group_id', '=', ':group_id');
+        $res = $STH->get($table, $fields, $values, $where)->getResults();
+        //Get info from groups_lookup
+        if (count($res) == 1){
+            $res = $res[0];
+        }
+        
+        if ($members){
+            $table = 'groups_lookup';
+            if ($songIdOnly = TRUE){
+                $fields = array('song_id');
+            }
+            $res['members'] = $STH->get($table, $fields, $values, $where)->getResults();
+        }
+        return $res;
+    }
+    
+    public function updateGroup(array $old_group, array $new_group){
         $this->_errors = array();
     }
-    public function viewGroup(){
+    
+    public function songIdentity($song_id){
         $this->_errors = array();
-    }
-    public function updateGroup(){
-        $this->_errors = array();
+        $STH = $this->getHandler();
+        $table = 'groups_lookup';
+        $fields = '*';
+        $values = array(':song_id' => $song_id);
+        $where = array('song_id', '=', ':song_id');
+        $res = $STH->get($table, $fields, $values, $where)->getResults();
+        $res['count'] = $STH->lastCount();
+        return $res;
     }
 }
 ?>

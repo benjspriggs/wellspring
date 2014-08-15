@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2014 at 06:07 AM
+-- Generation Time: Aug 15, 2014 at 05:05 AM
 -- Server version: 5.6.16
 -- PHP Version: 5.5.11
 
@@ -36,6 +36,60 @@ CREATE TABLE IF NOT EXISTS `embeds` (
   PRIMARY KEY (`embed_id`),
   KEY `song_id` (`song_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups`
+--
+
+CREATE TABLE IF NOT EXISTS `groups` (
+  `group_id` int(255) unsigned NOT NULL AUTO_INCREMENT,
+  `group_name` varchar(40) NOT NULL,
+  `group_desc` text NOT NULL,
+  `type` tinyint(4) NOT NULL,
+  `user_id` int(255) unsigned NOT NULL,
+  PRIMARY KEY (`group_id`),
+  KEY `user_id` (`user_id`),
+  FULLTEXT KEY `group_desc` (`group_desc`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+--
+-- Dumping data for table `groups`
+--
+
+INSERT INTO `groups` (`group_id`, `group_name`, `group_desc`, `type`, `user_id`) VALUES
+(1, 'test', 'this is a test', 2, 1),
+(2, 'test', 'this is a test', 2, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups_lookup`
+--
+
+CREATE TABLE IF NOT EXISTS `groups_lookup` (
+  `group_id` int(255) unsigned NOT NULL,
+  `song_id` int(255) unsigned NOT NULL,
+  `user_id` int(255) unsigned NOT NULL,
+  KEY `group_id` (`group_id`),
+  KEY `song_id` (`song_id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `groups_lookup`
+--
+
+INSERT INTO `groups_lookup` (`group_id`, `song_id`, `user_id`) VALUES
+(1, 30, 1),
+(1, 32, 1),
+(1, 33, 1),
+(1, 34, 1),
+(2, 30, 1),
+(2, 32, 1),
+(2, 33, 1),
+(2, 34, 1);
 
 -- --------------------------------------------------------
 
@@ -77,14 +131,7 @@ CREATE TABLE IF NOT EXISTS `session_data` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Dumping data for table `session_data`
---
-
-INSERT INTO `session_data` (`id`, `user_id`, `token`, `timestamp`) VALUES
-(2, 1, '1c0391e411f94166ed4d6facf51b4c78', '2014-07-22 03:02:17');
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
 
 -- --------------------------------------------------------
 
@@ -103,7 +150,7 @@ CREATE TABLE IF NOT EXISTS `songs_meta` (
   PRIMARY KEY (`song_id`),
   UNIQUE KEY `song_name` (`song_name`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
 
 --
 -- Dumping data for table `songs_meta`
@@ -115,7 +162,9 @@ INSERT INTO `songs_meta` (`song_id`, `song_name`, `user_id`, `lyrics`, `song_des
 (33, 'aaaaaaaahaha', 1, 'hahah', 'ahah', '2014-07-02 05:18:23', '2014-07-02 03:18:23'),
 (34, 'dfsd', 1, 'asdfasdf', 'asdfaf', '2014-07-02 05:24:51', '2014-07-02 03:24:51'),
 (37, 'plz', 1, 'work', 'thnx', '2014-07-22 05:08:42', '2014-07-22 03:08:42'),
-(38, 'two', 1, 'testing', 'the', '2014-07-22 05:27:04', '2014-07-22 03:27:04');
+(38, 'two', 1, 'testing', 'the', '2014-07-22 05:27:04', '2014-07-22 03:27:04'),
+(39, 'this is a story', 0, 'about life, y\\''know', 'like dood', '2014-08-01 04:01:30', '2014-08-01 02:01:30'),
+(40, 'boom bam shebang', 0, 'hello there', 'fadgadsf', '2014-08-05 18:31:37', '2014-08-05 16:31:37');
 
 -- --------------------------------------------------------
 
@@ -129,21 +178,23 @@ CREATE TABLE IF NOT EXISTS `tags` (
   `tags` varchar(1000) NOT NULL,
   `postdate` datetime NOT NULL,
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `tag_id` int(255) unsigned NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`tag_id`),
+  `tags_id` int(255) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`tags_id`),
   UNIQUE KEY `song_id_2` (`song_id`),
   UNIQUE KEY `song_id_3` (`song_id`),
   KEY `song_id` (`song_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=25 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
 
 --
 -- Dumping data for table `tags`
 --
 
-INSERT INTO `tags` (`song_id`, `user_id`, `tags`, `postdate`, `timestamp`, `tag_id`) VALUES
+INSERT INTO `tags` (`song_id`, `user_id`, `tags`, `postdate`, `timestamp`, `tags_id`) VALUES
 (37, 1, 'plz, k', '2014-07-22 05:08:42', '2014-07-22 03:08:42', 23),
-(38, 1, 'two, tings', '2014-07-22 05:27:04', '2014-07-22 03:27:04', 24);
+(38, 1, 'two, tings', '2014-07-22 05:27:04', '2014-07-22 03:27:04', 24),
+(39, 0, 'this, is, a, story, yeah', '2014-08-01 04:01:30', '2014-08-01 02:01:30', 25),
+(40, 0, 'boom, bam, shebang, df,  asdfkajsd,  asdfaskdjf', '2014-08-05 18:31:37', '2014-08-05 16:31:37', 26);
 
 -- --------------------------------------------------------
 
@@ -184,6 +235,20 @@ ALTER TABLE `embeds`
   ADD CONSTRAINT `embeds_ibfk_1` FOREIGN KEY (`song_id`) REFERENCES `songs_meta` (`song_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
+-- Constraints for table `groups`
+--
+ALTER TABLE `groups`
+  ADD CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `groups_lookup`
+--
+ALTER TABLE `groups_lookup`
+  ADD CONSTRAINT `groups_lookup_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`group_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `groups_lookup_ibfk_2` FOREIGN KEY (`song_id`) REFERENCES `songs_meta` (`song_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `groups_lookup_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
 -- Constraints for table `media`
 --
 ALTER TABLE `media`
@@ -195,6 +260,12 @@ ALTER TABLE `media`
 --
 ALTER TABLE `session_data`
   ADD CONSTRAINT `session_data_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `songs_meta`
+--
+ALTER TABLE `songs_meta`
+  ADD CONSTRAINT `songs_meta_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `tags`

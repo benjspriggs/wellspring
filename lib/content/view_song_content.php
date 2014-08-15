@@ -19,7 +19,15 @@ if (isset($song['embeds'])){
 } else {
     $embeds = NULL;
 }
-
+$group = $SM->songIdentity(Input::get('song_id'));
+if ($group['count'] > 1){
+    $alliance['count'] = $group['count'];
+    for ($g = 0; $g < $group['count']; $g++){
+        $alliance[$g] = $SM->viewGroup($group[$g]['group_id']);
+    }
+} else {
+    $group = NULL;
+}
 ?>
 <h2 id="song_name"><?=$song['song_name']?></h2>
 <?php
@@ -31,7 +39,19 @@ if ($a){
     <p id="lyrics"><?=$song['lyrics']?></p>
     <p id="song_desc"><?=$song['song_desc']?></p>
     <p id="tags"><?=$tags?></p>
-    <p id="embeds"><?=$embeds?></p> 
+    <p id="embeds"><?=$embeds?></p>
+    <p id="group">This song is a part of:
+    <?php
+    if (isset($group)){
+        $r = '';
+        for ($g = 0; $g < $alliance['count']; $g++){
+            $r .= "<a href=\"group/view.php?group_id=". $alliance[$g]['group_id'] ."\">". $alliance[$g]['group_name']. "</a>, and ";
+        }
+        echo substr($r, 0, -6);
+    } else {
+        echo "No groups!";
+    }
+    ?>.</p>
 </article>
 <?php
 if ($media){

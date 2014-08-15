@@ -19,5 +19,9 @@ $GLOBALS['config'] = array(
                                 'uploads' => $_SERVER['DOCUMENT_ROOT']. '/wellspring/uploads/'),
                 'root_link' => array(
                                 'site' => '//' .$_SERVER['SERVER_NAME']. '/wellspring/',
-                                'content' => '//' .$_SERVER['SERVER_NAME']. '/wellspring/lib/content/'));
+                                'content' => '//' .$_SERVER['SERVER_NAME']. '/wellspring/lib/content/'),
+                'tables' => array(
+                                'content' => array('songs_meta', 'media', 'tags', 'embeds', 'groups', 'groups_lookup'),
+                                'internal' => array('users', 'session_data')
+                                ));
 ?>

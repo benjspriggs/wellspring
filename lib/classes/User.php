@@ -153,6 +153,15 @@ class User {
         }
     }
     
+    public function attribute($user_id, $table){
+        $this->clearErrors();
+        $STH = $this->STH;
+        $values = array(':user_id' => $user_id);
+        $where = array('user_id', '=', ':user_id');
+        $results = $STH->get($table, 'user_id', $values, $where)->getResults();
+        return $results;
+    }
+    
     public function logIn($username, $password, $remember = FALSE){
         $this->clearErrors();
         $loggedin = $this->isLoggedIn($this->getUserID($username));

@@ -250,8 +250,8 @@ class StatementHandler {
                     foreach($dataset as $pairs){
                         if ($masterKey != NULL){
                             $toReplaceArray = array_keys($pairs, "LAST_INSERT_ID()", true);
-                            var_dump($toReplaceArray);
-                            echo "<br>And the master key is:<br>".$masterKey;
+                            //var_dump($toReplaceArray);
+                            //echo "<br>And the master key is:<br>".$masterKey;
                             if (!empty($toReplaceArray)){
                                 $toReplace = $toReplaceArray[0];
                                 $pairs[$toReplace] = $masterKey;
@@ -261,6 +261,7 @@ class StatementHandler {
                     }
                 }
                 //This is at the end, since you won't ever have to replace a data pair in the lookup table you are referencing ($primarytable)
+                //echo "Tablename check reached. Tablename is: $tablename, and primary table is $primarytable";
                 if ($tablename == $primarytable){
                     $masterKey = $this->getConnection()->lastInsertId($primarytable .".". $keyname);
                     $this->commit(); //Since the foriegn keys need a reference, there is a commit here
