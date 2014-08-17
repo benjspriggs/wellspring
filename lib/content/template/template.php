@@ -1,6 +1,7 @@
 <?php
 ob_start();
 require_once(Config::get('root/lib').'checks/loggedin.php');
+require_once(Config::get('root/lib').'checks/login-remember.php');
 ob_flush();
 ?>
 <!DOCTYPE html>

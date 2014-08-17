@@ -64,19 +64,20 @@ class User {
         $this->clearErrors();
         $STH = $this->STH;
         $dbhash = $this->getDBHash($userid); //Session data
-        $exists = $this->getUsername($userid);
-        if ($exists != NULL){
+        $username = $this->getUsername($userid);
+        if ($username != NULL){
             if ($dbhash != NULL){
-                if (Session::get(Config::get('session/session_name')) == $dbhash){
-                    if (Session::get(Config::get('session/session_name')) + md5(uniqid(self::getUsername($userid))) === Cookie::get(Config::get('remember/cookie_name'))){
+                $token = Session::get(Config::get('session/session_name'));
+                if ($token == $dbhash){
+                    if (Hash::encode($username, $token) == Cookie::get(Config::get('remember/cookie_name'))){
                         //The user is logged in and remembered
                         return 3;
                     }
                     //The user is logged in successfully
                     return 2;
                 } else {
-                    $this->_errors[] = "The record exists but the session data does not match.";
-                    return 1;
+                    $this->_errors[] = "The record exists but the session data does not match. Possibly logged in on another browser.";
+                    return 1.5;
                 }
             } else {
                 //Session data has not been created, and the user has not logged in anywhere else
@@ -181,8 +182,6 @@ class User {
             $dbhash = $dbres[0]['pass'];
             $salt = $dbres[0]['salt'];
             if ($validate->passed()){
-                //$password = Hash::encode($password, $salt);
-                //echo "DB Hash is :$dbhash <br>Password is:$password";
                 if ($dbhash == $password){
                     $this->loggedin = TRUE;
                     $token = Token::generate();
@@ -193,8 +192,9 @@ class User {
                     $STH->insert('session_data', array('user_id' => $user_id, 'token' => $token));
                     
                     if ($remember){
-                        $cookie = $token . md5(uniqid($username));
-                        Cookie::create(Config::get('remember/cookie_name'), $token);
+                        $cookie = Hash::encode($username, $token);
+                        Cookie::create(Config::get('remember/cookie_name'), $cookie);
+                        Cookie::create('id', $user_id);
                     }
                     
                     return $this;
@@ -216,6 +216,7 @@ class User {
         switch($this->isLoggedIn($id)){
             case(3):
                 Cookie::destroy(Config::get('remember/cookie_name'));
+                Cookie::destroy('id');
             case(2):
                 //BLOW IT UP DOOD
                 Session::destroy(Config::get('session/session_name'));

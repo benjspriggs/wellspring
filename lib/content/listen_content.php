@@ -39,21 +39,33 @@ foreach($results as $entry => $song){
         echo "<h4 id=\"title\">";
             echo "<a href=\"song/view.php?song_id=". $song['song_id'] ."\">". $song['song_name']. "</a>";
         echo "</h4>\n";
-        echo "<img src=\"";
         if ($SM->hasMedia(intval($song['song_id']))){
             $media = $SM->viewSong($song['song_id'], 'media');
-            if (is_array($media[0])){
+            if (is_array($media[0])){ //Multiple media instances associated
                 $piece = $media[0];
-                echo "uploads/". $song['song_name'] ."/". $piece['media_name'] .".". $piece['filetype'] . "\"";
-                echo ">\n";
+                switch (findMediaType($piece['filetype'])){
+                    case ("img"):
+                        echo "<img src=\"uploads/". $song['song_name'] ."/". $piece['media_name'] .".". $piece['filetype'] . "\"";
+                        echo ">\n";
+                        break;
+                    default:
+                        break;
+                }
             } else {
-                echo "uploads/". $song['song_name'] ."/". $media['media_name'] .".". $media['filetype'] . "\"";
-                echo ">\n";
+                switch (findMediaType($media['filetype']) == 'img'){
+                    case ("img"):
+                        echo "<img src=\"uploads/". $song['song_name'] ."/". $media['media_name'] .".". $media['filetype'] . "\"";
+                        echo ">\n";
+                        break;
+                    default:
+                        break;
+                    
+                }
+                
             }
             
         } else {
-            //Song['media_name'] was empty
-            echo "img/noimg.jpg\" />\n";
+            $media = NULL;
         }
         
         echo "<div id=\"hideme\" class=\"hidden\">\n
@@ -72,11 +84,13 @@ foreach($results as $entry => $song){
             echo "Lyrics:<br>\n";
                 echo $song['lyrics'];
             echo "</p>\n<br>";
-            //if (find_media_type($finfo['filetype']) == "vid"){
-            //echo "<video><source src=\"";
-            ////Insert any uploaded videos, or embeds here (Make sure to account for browsers that can't serve up HTML5 video)
-            //echo "\"></video>";
-            //}
+            
+            if ($media){
+                ob_start();
+                include('media_basic_links.php');
+                ob_flush();
+            }
+            
             echo "<div id=\"stags\"><p>";
             //Tags go here (Separate them and replace commas with hashtags!)
             if (isset($song['tags'])){

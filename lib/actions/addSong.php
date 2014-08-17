@@ -32,7 +32,7 @@ if ($validate->passed()){
         $SM->addFiles($files, $songObj);
     }
     $SM->addSong($songObj);
-    echo $SM->getErrors();
+    $SM->getErrors();
 } else {
     echo "Validation failed for the following reasongs:<br>";
     $validate->errors();

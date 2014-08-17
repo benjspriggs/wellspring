@@ -1,8 +1,8 @@
 <?php
-if ($logged){
+if ($loggedin || $login_remember){
     $token = Token::exittoken();
     $login = "Welcome, ";
-    $login .= Session::get('username'). "!   ";
+    $login .= "<a href=\"user/view.php?user_id=". Session::get('uid') ."\">". Session::get('username') ."</a>!   ";
     $id = Session::get('uid');
     //Echo a href that will log the user out
     $login .= "<a href=\"loading.php?user_id=";

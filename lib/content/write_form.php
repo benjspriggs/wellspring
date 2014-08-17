@@ -7,9 +7,9 @@
             <label for="desc">Song description:</label><textarea name="desc" maxlength="500" id="desc" required></textarea><br><!-- TinyMCE -->
             <label for="tags">Tags:</label><input type="text" name="tags" maxlength="1000" id="tags"><br>
         </fieldset>
-        <fieldset>
+        <fieldset title="You can upload <?=ini_get('max_file_uploads')?> file(s), each being less than <?=ini_get('upload_max_filesize')?> in size. The upload can't be bigger than <?=ini_get('post_max_size')?>.">
         <?php
-        if ($logged){
+        if ($loggedin){
             echo "<li><label for=\"sheet_music\">Sheet music, video performances:</label><input type=\"file\" name=\"sfile[]\" id=\"sfile\" multiple></li><br>";
         } else {
             echo "<li>You'll need to log in in order to upload a file. You can log in <a href=\"login.php\">here</a>.</li><br>";

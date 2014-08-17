@@ -31,7 +31,7 @@ if ($group['count'] > 1){
 ?>
 <h2 id="song_name"><?=$song['song_name']?></h2>
 <?php
-if ($a){
+if ($accepted){
     echo "<a href=\"song/edit.php?song_id=". Input::get('song_id') ."\">Edit</a>";
 }
 ?>
@@ -55,35 +55,9 @@ if ($a){
 </article>
 <?php
 if ($media){
-    if (is_array($media[0])){
-        foreach ($media as $key => $piece){
-            $type = findMediaType($piece['filetype']);
-            switch($type){
-                case('img'):
-                    echo "<img src=\"uploads/". $song['song_name'] ."/". $piece['media_name'] .".". $piece['filetype'] . "\">";
-                    break;
-                case('vid'):
-                    break;
-                case('aud'):
-                    break;
-                default:
-                    break;
-            }
-        }
-    } else {
-        $type = findMediaType($media['filetype']);
-        switch($type){
-            case('img'):
-                echo "<img src=\"uploads/". $song['song_name'] ."/". $media['media_name'] .".". $media['filetype'] . "\">";
-                break;
-            case('vid'):
-                break;
-            case('aud'):
-                break;
-            default:
-                break;
-        }
-    }
+    ob_start();
+    include('media_basic_represent.php');
+    ob_flush();
 }
 
 ?>

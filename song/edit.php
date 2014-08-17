@@ -1,13 +1,13 @@
 <?php
 require_once('../lib/init.php');
-
 require_once('../lib/checks/accepted.php');
+
 $STH = new StatementHandler($PDO);
 $s = new SongManager($STH);
 $i = Input::get('song_id');
 $check = $s->exists($i);
 if ($check){
-    if ($a){
+    if ($accepted){
         $t = new Template('Edit Song', array('main', 'form', 'edit'), 'edit_song_form.php', array('edit'));
         require_once(Config::get('root/content') . 'template/template.php');
     } else {

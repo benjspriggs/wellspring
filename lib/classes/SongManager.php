@@ -115,6 +115,25 @@ class SongManager {
         return $songObj;
     }
     
+    ##Removes media (singular and plural) from the database
+    public function removeFiles($media_id){
+        $this->_errors[] = array();
+        $STH = $this->getHandler();
+        $table = 'media';
+        $where = array('media_id', '=', ':media_id');
+        if (is_array($media_id)){
+            foreach($media_ids as $index => $id){
+                $values = array('media_id' => $id);
+                $STH->delete($table, $values, $where);
+            }
+        } else {
+            $values = array('media_id' => $media_id);
+            $STH->delete($table, $values, $where);
+        }
+        
+        return $this;
+    }
+    
     private function generateView($view = 'text', $sortby = '', $exclusive = FALSE){
         $this->clearView();
         if ($exclusive){

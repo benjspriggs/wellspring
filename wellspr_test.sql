@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 15, 2014 at 05:05 AM
+-- Generation Time: Aug 17, 2014 at 07:39 AM
 -- Server version: 5.6.16
 -- PHP Version: 5.5.11
 
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `groups` (
   PRIMARY KEY (`group_id`),
   KEY `user_id` (`user_id`),
   FULLTEXT KEY `group_desc` (`group_desc`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `groups`
@@ -60,7 +60,9 @@ CREATE TABLE IF NOT EXISTS `groups` (
 
 INSERT INTO `groups` (`group_id`, `group_name`, `group_desc`, `type`, `user_id`) VALUES
 (1, 'test', 'this is a test', 2, 1),
-(2, 'test', 'this is a test', 2, 1);
+(2, 'test', 'this is a test', 2, 1),
+(3, 'test', 'this is a test', 2, 1),
+(4, 'test', 'this is a test', 2, 1);
 
 -- --------------------------------------------------------
 
@@ -89,7 +91,15 @@ INSERT INTO `groups_lookup` (`group_id`, `song_id`, `user_id`) VALUES
 (2, 30, 1),
 (2, 32, 1),
 (2, 33, 1),
-(2, 34, 1);
+(2, 34, 1),
+(3, 30, 1),
+(3, 32, 1),
+(3, 33, 1),
+(3, 34, 1),
+(4, 30, 1),
+(4, 32, 1),
+(4, 33, 1),
+(4, 34, 1);
 
 -- --------------------------------------------------------
 
@@ -107,7 +117,7 @@ CREATE TABLE IF NOT EXISTS `media` (
   PRIMARY KEY (`media_id`),
   KEY `song_id` (`song_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `media`
@@ -116,7 +126,8 @@ CREATE TABLE IF NOT EXISTS `media` (
 INSERT INTO `media` (`media_id`, `song_id`, `user_id`, `media_name`, `filetype`, `timestamp`) VALUES
 (2, 37, 1, '9asJe', 'jpg', '2014-07-22 03:08:42'),
 (3, 38, 1, '88la2', 'jpg', '2014-07-22 03:27:04'),
-(4, 38, 1, 'a0uoN', 'jpg', '2014-07-22 03:27:04');
+(4, 38, 1, 'a0uoN', 'jpg', '2014-07-22 03:27:04'),
+(6, 47, 1, 'The Misha Song ', 'mp3', '2014-08-16 03:35:03');
 
 -- --------------------------------------------------------
 
@@ -131,7 +142,14 @@ CREATE TABLE IF NOT EXISTS `session_data` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+
+--
+-- Dumping data for table `session_data`
+--
+
+INSERT INTO `session_data` (`id`, `user_id`, `token`, `timestamp`) VALUES
+(26, 1, '363b8b1d7b19bc766bff3a7640c297a8', '2014-08-17 03:18:41');
 
 -- --------------------------------------------------------
 
@@ -150,7 +168,7 @@ CREATE TABLE IF NOT EXISTS `songs_meta` (
   PRIMARY KEY (`song_id`),
   UNIQUE KEY `song_name` (`song_name`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=41 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=48 ;
 
 --
 -- Dumping data for table `songs_meta`
@@ -164,7 +182,9 @@ INSERT INTO `songs_meta` (`song_id`, `song_name`, `user_id`, `lyrics`, `song_des
 (37, 'plz', 1, 'work', 'thnx', '2014-07-22 05:08:42', '2014-07-22 03:08:42'),
 (38, 'two', 1, 'testing', 'the', '2014-07-22 05:27:04', '2014-07-22 03:27:04'),
 (39, 'this is a story', 0, 'about life, y\\''know', 'like dood', '2014-08-01 04:01:30', '2014-08-01 02:01:30'),
-(40, 'boom bam shebang', 0, 'hello there', 'fadgadsf', '2014-08-05 18:31:37', '2014-08-05 16:31:37');
+(40, 'boom bam shebang', 0, 'hello there', 'fadgadsf', '2014-08-05 18:31:37', '2014-08-05 16:31:37'),
+(42, 'why no', 1, 'f', 'd', '2014-08-16 05:25:17', '2014-08-16 03:25:17'),
+(47, 'Zdsd', 1, 'asdasd', 'asda', '2014-08-16 05:35:03', '2014-08-16 03:35:03');
 
 -- --------------------------------------------------------
 
@@ -184,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `tags` (
   UNIQUE KEY `song_id_3` (`song_id`),
   KEY `song_id` (`song_id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=27 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=34 ;
 
 --
 -- Dumping data for table `tags`
@@ -194,7 +214,9 @@ INSERT INTO `tags` (`song_id`, `user_id`, `tags`, `postdate`, `timestamp`, `tags
 (37, 1, 'plz, k', '2014-07-22 05:08:42', '2014-07-22 03:08:42', 23),
 (38, 1, 'two, tings', '2014-07-22 05:27:04', '2014-07-22 03:27:04', 24),
 (39, 0, 'this, is, a, story, yeah', '2014-08-01 04:01:30', '2014-08-01 02:01:30', 25),
-(40, 0, 'boom, bam, shebang, df,  asdfkajsd,  asdfaskdjf', '2014-08-05 18:31:37', '2014-08-05 16:31:37', 26);
+(40, 0, 'boom, bam, shebang, df,  asdfkajsd,  asdfaskdjf', '2014-08-05 18:31:37', '2014-08-05 16:31:37', 26),
+(42, 1, 'why, no', '2014-08-16 05:25:17', '2014-08-16 03:25:17', 28),
+(47, 1, 'Zdsd, a', '2014-08-16 05:35:03', '2014-08-16 03:35:03', 33);
 
 -- --------------------------------------------------------
 

@@ -3,9 +3,9 @@ $STH = new StatementHandler($PDO);
 $u = new User($STH);
 $uid = Session::get('uid');
 if ($u->isLoggedin($uid) >= 2){
-    $logged = TRUE;
+    $loggedin = TRUE;
 } else {
-    $logged = FALSE;
+    $loggedin = FALSE;
 }
-return $logged;
+return $loggedin;
 ?>

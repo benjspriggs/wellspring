@@ -2,6 +2,7 @@
 ##This script contains functions that the generality of the website uses
 
 ##Finds the type of the media uploaded to the fileserver.
+##Matches strings of known file extentions with general media types.
 function findMediaType ($str){
     $type_img = array("jpg", "bmp", "png");
     $type_vid = array("mov", "wmv", "avi", "mp4");

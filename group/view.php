@@ -10,7 +10,7 @@ if ($check){
     require_once(Config::get('root/content') . 'template/view_template.php');
 } else {
     Input::put('resource', 'group');
-    $t = new Template("404 | Song View", array('main'), 'errors/404.php', array('view'));
+    $t = new Template("404 | Group View", array('main'), 'errors/404.php', array('view'));
     require_once(Config::get('root/content') . 'template/view_template.php');
 }
 ?>

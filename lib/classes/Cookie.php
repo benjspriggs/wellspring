@@ -1,7 +1,7 @@
 <?php
 class Cookie {
     public static function create($name, $value){
-        setcookie($name, $value, Config::get('remember/cookie_expiry'));
+        setcookie($name, $value, time() + Config::get('remember/cookie_expiry'));
     }
     
     public static function exists($name){
@@ -17,10 +17,9 @@ class Cookie {
             return $_COOKIE[$name];
         }
     }
+    
     public static function destroy($name){
-        if (Cookie::exists($name)){
-            setcookie($name, '', time()-3600);
-        }
+        setcookie($name, '', time() - 3600);
     }
 }
 ?>

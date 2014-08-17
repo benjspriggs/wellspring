@@ -7,7 +7,7 @@
         <input type="password" id="password" name="password" max="20" required placeholder="Password">
     </div>
     <div id="field" name="field">
-        <label for="remember">Remember? </label>
+        <label for="remember" title="This option is less safe than logging in each time you want to do something, but we ain't judging.">Remember? </label>
         <input type="checkbox" id="remember" name="remember" value="yes">
     </div>
     <div id="field" name="field">
