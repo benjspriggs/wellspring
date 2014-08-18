@@ -2,6 +2,7 @@
 ob_start();
 require_once(Config::get('root/lib').'checks/loggedin.php');
 require_once(Config::get('root/lib').'checks/login-remember.php');
+require_once(Config::get('root/lib').'checks/accepted.php');
 ob_flush();
 ?>
 <!DOCTYPE html>
@@ -20,8 +21,18 @@ ob_flush();
         <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/header.css">
         <!-- You're going to need a way for the search bar to be checked if it has any data in it -->
         <!-- Don't forget the meta tags, and Google Font API links! -->
-        <!-- Link jquery/ external scripts here -->
         <!-- Favicon info, make sure to name the .ico file favicon.ico for IE6 peeps -->
+        <?php
+        if (!empty($view['song_desc'])){
+            echo "<meta name=\"description\" content=\"". $view['song_desc'] ."\">";
+        } elseif (!empty($view['group_desc'])){
+            echo "<meta name=\"description\" content=\"". $view['group_desc'] ."\">";
+        } else {
+            echo "<meta name=\"description\" content=\"";
+            echo $t->getDesc();
+            echo "\">";
+        }
+        ?>
     </head>
     
     <body>

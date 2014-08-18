@@ -23,6 +23,7 @@ function combineCommaString (array $string){
     return implode(', ', $string);
 }
 
+##Escapes data. Use array_walk_recursive to cleanse arrays
 function escape ($data){
     return mysql_real_escape_string($data);
 }

@@ -18,6 +18,7 @@ if ($loggedin || $login_remember){
         <a href="home.php"><li>home</li></a>
         <a href="write.php"><li>write</li></a>
         <a href="listen.php"><li>listen</li></a>
+        <a href="group/view.php"><li>groups</li></a>
     </ul>
     
     <div id="login">

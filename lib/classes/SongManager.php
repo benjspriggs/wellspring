@@ -122,7 +122,7 @@ class SongManager {
         $table = 'media';
         $where = array('media_id', '=', ':media_id');
         if (is_array($media_id)){
-            foreach($media_ids as $index => $id){
+            foreach($media_id as $index => $id){
                 $values = array('media_id' => $id);
                 $STH->delete($table, $values, $where);
             }

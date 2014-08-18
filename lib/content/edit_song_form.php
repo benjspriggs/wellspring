@@ -9,6 +9,13 @@ $desc = $r['song_desc'];
 $lyrics = $r['lyrics'];
 $tags = $r['tags'];
 $embeds = $r['embeds'];
+
+if ($SM->hasMedia(Input::get('song_id'))){
+    $m = $SM->viewSong(Input::get('song_id'), 'media');
+} else {
+    $m = NULL;
+}
+$r['media'] = $m;
 $token = Token::csrf();
 ?>
 <div id="editcont">
@@ -22,6 +29,32 @@ $token = Token::csrf();
             <input name="embeds" id="embeds" value="<?=$embeds?>" placeholder="Embeds and links"><br>
             <input type="file" name="sfile[]" id="sfile[]" multiple>
         </ul>
+        <?php
+            if  ($r['media']){
+                echo "<p id=\"media-table\">";
+                echo "<table>";
+                echo "<tr><td>Delete?</td><td>File name</td><td>File type</td></tr>";
+                if (is_array($r['media'][0])){
+                    //Multiple assets
+                    foreach ($r['media'] as $index => $asset){
+                        echo "<tr>";
+                        echo "<td><input type=\"checkbox\" name=\"delete[]\" value=\"". $asset['media_id'] ."\"></td>";
+                        echo "<td>". $asset['media_name'] ."</td>";
+                        echo "<td>". $asset['filetype'] ."</td>";
+                        echo "</tr>";
+                    }
+                } else {
+                    echo "<tr>";
+                    echo "<td><input type=\"checkbox\" name=\"delete[]\" value=\"". $r['media']['media_id'] ."\"></td>";
+                    echo "<td>". $r['media']['media_name'] ."</td>";
+                    echo "<td>". $r['media']['filetype'] ."</td>";
+                    echo "</tr>";
+                }
+                echo "</table>";
+                echo "</p>";
+                //echo "<input type=\"file\" name=\"sfile[]\" id=\"sfile\" multiple>";
+            }
+            ?>
         <div id="submit">
             <input type="submit" name="submit" value="Update">
         </div>

@@ -17,7 +17,10 @@ $STH = new StatementHandler($PDO);
 $SM = new SongManager($STH);
 $results = $SM->viewSongs(array('num_res' => $num_res, 'page' => $page), 'full', 'recent');
 $count = $STH->getEstimate('songs_meta', 'song_id');
-$total = ceil(($count/$num_res) + .5);
+$total = ceil(($count/$num_res));
+if ($count < $num_res){
+    $num_res = $count;
+}
 echo "Showing page $page of $total. <br>";
 for($a = 1; $a <= $total; $a++){
     if ($a == $page){

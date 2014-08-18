@@ -11,7 +11,7 @@ if (Session::exists(Config::get('session/session_name')) && Cookie::exists(Confi
         $login_remember = FALSE;
     }
 } else {
-    $login_remember = FALSE;
+    $login_remember = NULL;
 }
 return $login_remember;
 ?>
