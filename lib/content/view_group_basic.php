@@ -2,13 +2,17 @@
 $name = $view['group_name'];
 $desc = $view['group_desc'];
 $members = $view['members'];
+$STH = new StatementHandler($PDO);
+$SM = new SongManager($STH);
 ?>
 <h2><?=$name?></h2>
 <p><?=$desc?></p>
-<ul><legend>Songs that are a part of this group:</legend>
+<ul><legend><h4>Songs that are a part of this group:</h4></legend>
     <?php
     foreach ($members as $key => $song_id){
-        echo "<a href=\"song/view.php?song_id=". $song_id['song_id'] ."\"><li>". $song_id['song_id']. "</li></a>";
+        $view = $SM->viewSong($song_id['song_id'], 'text');
+        echo "<li><p><a href=\"song/view.php?song_id=". $view['song_id'] ."\">". $view['song_id']. "</a> - ";
+        echo $view['song_name'] ."</p></li>";
     }
     ?>
 </ul>

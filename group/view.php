@@ -2,7 +2,7 @@
 require_once('../lib/init.php');
 $STH = new StatementHandler($PDO);
 $s = new SongManager($STH);
-if (Input::exists('get')){
+if (Input::get('group_id')){
     //They wanna see a specific group
     $i = Input::get('group_id');
     $check = $s->exists($i, 'group');
@@ -17,7 +17,7 @@ if (Input::exists('get')){
     }
 } else {
     //They just wanna see groups
-    $t = new Template('Groups', array('main', 'song'), 'group_view_content.php', 'View a group in the Wellspring database!',array('view'));
+    $t = new Template('Groups', array('main', 'song'), 'view_group_content.php', 'View a group in the Wellspring database!',array('view'));
     require_once(Config::get('root/content') . 'template/template.php');
 }
 

@@ -16,9 +16,14 @@ if ($loggedin || $login_remember){
     
     <ul id="nav"> <!-- Navigational bar -->
         <a href="home.php"><li>home</li></a>
+            
         <a href="write.php"><li>write</li></a>
         <a href="listen.php"><li>listen</li></a>
         <a href="group/view.php"><li>groups</li></a>
+            <ul class="child-header">
+                <a href="group/view.php"><li>view</li></a>
+                <a href="group/create.php"><li>create</li></a>
+            </ul>
     </ul>
     
     <div id="login">

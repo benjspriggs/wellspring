@@ -16,7 +16,12 @@ class Validate {
         $STH = $this->getHandler();
         foreach($items as $item => $rules){
             foreach($rules as $rule => $rule_value){
-                $value = trim($source[$item]);
+                if (!is_array($source[$item])){
+                    $value = trim($source[$item]);
+                } else {
+                    array_walk($source[$item], 'trim');
+                }
+                
                 if ($rule === 'required' && empty($value)){
                     $this->addError("{$item} is required");
                 } elseif (!empty($value)){
@@ -51,6 +56,21 @@ class Validate {
                         case 'is_email':
                             if (!filter_var($value, FILTER_VALIDATE_EMAIL)){
                                 $this->addError("The e-mail provided was not vaild.");
+                            }
+                            break;
+                        case 'min_array': ##CHECK THIS STUFF, THE ARRAYS ARE NOT BEHAVING AS GOOD LITTLE SWITCH CASES SHOULD
+                            if (!is_array($value) || count($value) > $rule_value){
+                                $this->addError("The array must have at least $rule_value element(s).");
+                            }
+                            break;
+                        case 'max_array':
+                            if (!is_array($value) || count($value) > $rule_value){
+                                $this->addError("The array must have less than $rule_value element(s).");
+                            }
+                            break;
+                        case 'filled':
+                            if (!is_array($value) || count($value) >= 1){
+                                $this->addError("The array must have at least 1 element.");
                             }
                             break;
                     }

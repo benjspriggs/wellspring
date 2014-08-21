@@ -20,8 +20,10 @@ class SongManager {
     }
     
     public function getErrors(){
-        foreach($this->_errors as $key){
-            echo "<br>". $key ."<br>";
+        if (!empty($this->_errors)){
+            foreach($this->_errors as $key){
+                echo "<br>". $key ."<br>";
+            }
         }
     }
     
@@ -326,10 +328,6 @@ class SongManager {
             $this->_errors[] = 'There was no num_res specified in viewSongs call, fatal';
             return $this;
         }
-        
-        //Sort the results (by recent, oldest, user etc)
-        
-        //Return the array of song objects that match the provided limits
     }
     
     //Files has structure of: files=>array( name=>array([0] first name, [1] second name), filetype=>array([0 first filetype, [1] second filetype))
@@ -417,28 +415,75 @@ class SongManager {
     public function viewGroup($group_id, $members = FALSE, $songIdOnly = TRUE){
         $this->_errors = array();
         $STH = $this->getHandler();
-        //Get info from groups
         $table = 'groups';
         $fields = '*';
-        $values = array(':group_id' => $group_id);
-        $where = array('group_id', '=', ':group_id');
-        $res = $STH->get($table, $fields, $values, $where)->getResults();
-        //Get info from groups_lookup
-        if (count($res) == 1){
-            $res = $res[0];
+        if (is_array($group_id)){
+            foreach ($group_id as $key => $id){
+                $values = array(':group_id' => $id);
+                $where = array('group_id', '=', ':group_id');
+                $res[$key] = $STH->get($table, $fields, $values, $where)->getResults();
+                //Get info from groups_lookup
+                if (count($res[$key]) == 1){
+                    $res[$key] = $res[$key][0];
+                }
+                
+                if ($members){
+                    $table = 'groups_lookup';
+                    if ($songIdOnly = TRUE){
+                        $fields = array('song_id');
+                    }
+                    $res[$key]['members'] = $STH->get($table, $fields, $values, $where)->getResults();
+                }
+            }
+        } else {
+            $values = array(':group_id' => $group_id);
+            $where = array('group_id', '=', ':group_id');
+            $res = $STH->get($table, $fields, $values, $where)->getResults();
+            //Get info from groups_lookup
+            if (count($res) == 1){
+                $res = $res[0];
+            }
+            
+            if ($members){
+                $table = 'groups_lookup';
+                if ($songIdOnly = TRUE){
+                    $fields = array('song_id');
+                }
+                $res['members'] = $STH->get($table, $fields, $values, $where)->getResults();
+            }
         }
         
-        if ($members){
-            $table = 'groups_lookup';
-            if ($songIdOnly = TRUE){
-                $fields = array('song_id');
-            }
-            $res['members'] = $STH->get($table, $fields, $values, $where)->getResults();
-        }
         return $res;
     }
     
-    public function updateGroup(array $old_group, array $new_group){
+    public function viewGroups($limits, $members = FALSE, $songIdOnly = TRUE, $orderby = ''){ //View? Adding some kind of filtration, like in the updatesongs call, but that seems too trivial for now
+        $this->_errors = array();
+        $STH = $this->getHandler();
+        $table = 'groups';
+        $fields = '*';
+        $where = array();
+        $join = '';
+        if (!is_array($limits) && $limits = 'all'){
+            $resArray = $STH->get($table, $fields)->getResults();
+            return $resArray; // Array filled with objects hydrated with the properties that match the query
+        }
+        if (array_key_exists('num_res', $limits)){
+            if (array_key_exists('page', $limits)){
+                $pair = array('start' => ($limits['num_res'] * ($limits['page'] -1)), 'end' => ($limits['num_res'] * $limits['page']));
+                $extra = ' LIMIT '. $pair['start']. ', '. $limits['num_res'];
+                $resArray = $STH->get($table, $fields, array(), $where, $orderby, $join, $extra)->getResults();
+                return $resArray; // Array filled with objects hydrated with the properties that match the query
+            } else {
+                $this->_errors[] = 'There was no page specified in viewGroups call, fatal';
+                return $this;
+            }
+        } else {
+            $this->_errors[] = 'There was no number of requested results specified in viewGroups call, fatal';
+            return $this;
+        }
+    }
+    
+    public function updateGroup($group_id, $user_id, array $old_group, array $new_group){
         $this->_errors = array();
     }
     

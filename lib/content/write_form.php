@@ -16,10 +16,10 @@
         }?>
         </fieldset>
         
-    <div id="submit">
-        <input type="submit" name="submit" value="Upload">
-    </div>
-    <input type="hidden" id="token" name="token" value="<?=Token::csrf();?>">
-    <input id="action" name="action" value="addSong" type="hidden">
+        <div id="submit">
+            <input type="submit" name="submit" value="Upload">
+        </div>
+        <input type="hidden" id="token" name="token" value="<?=Token::csrf();?>">
+        <input id="action" name="action" value="addGroup" type="hidden">
     </form>
 </div>
