@@ -1,30 +1,26 @@
 CHECK FOR CONSISTENCY OF DESIGN
 CHECK FOR FALLBACKS FOR NEW TECH
 
-How will users add, edit, and remove images with songs?
+
 What will groups look like? How will they be created, destoryed, viewed, and edited?
 How will a printing service work? How will a logo be added, or a "Printed with Wellspring" to the back of a book?
 How can users find content based on lyrics, tags, or whatever?
 
 TODO:
--Edit songs (files?)
-	-Audio files
-	-Video files
-
-
--Create groups
 -Delete groups
 -Modify groups
 
 -Users page
 =Edit users
 
+
+~~~ After app-related things are done~~~
+
 -AJAX updates on side
 
 =Annoucement system
 -Copyright info
 
-~~~ After app-related things are done~~~
 -Visual design for groups
 -Visual design for modify users/ view users page
 -Visual design for view songs/edit functionality
