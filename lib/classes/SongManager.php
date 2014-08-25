@@ -303,22 +303,41 @@ class SongManager {
     }
     
     ##Limits array: Start (min), Num_res (max), Page (default 1)
-    public function viewSongs(array $limits, $view = 'text', $sortby = '', $userid = ''){
+    public function viewSongs($limits, $view = 'text', $sortby = '', $user_id = ''){
         //Get all of the data from the DB
         $this->_errors = array();
         $STH = $this->getHandler();
         $this->generateView($view, $sortby);
         $table = 'songs_meta';
         $fields = $this->getFields();
-        $where = array();
         $orderby = $this->getOrderby();
         $join = $this->getJoin();
         //Ask DB for all row that are between the start, num rows, and begin after the page limit
-        if (array_key_exists('num_res', $limits)){
+        if (!is_array($limits) && $limits = 'all'){
+            $fields = '*';
+            if (isset($user_id)){
+                $user_id = intval($user_id);
+                $values = array(':user_id' => $user_id);
+                $where = array('user_id', '=', ':user_id');
+            } else {
+                $values = array();
+                $where = array();
+            }
+            $resArray = $STH->get($table, $fields, $values, $where, $orderby, $join)->getResults();
+            return $resArray;
+        } elseif (array_key_exists('num_res', $limits)){
             if (array_key_exists('page', $limits)){
+                if (isset($user_id)){
+                    $user_id = intval($user_id);
+                    $values = array(':user_id' => $user_id);
+                    $where = array('user_id', '=', ':user_id');
+                } else {
+                    $values = array();
+                    $where = array();
+                }
                 $pair = array('start' => ($limits['num_res'] * ($limits['page'] -1)), 'end' => ($limits['num_res'] * $limits['page']));
                 $extra = " LIMIT ". $pair['start']. ", ". $limits['num_res'];
-                $resArray = $STH->get($table, $fields, array(), $where, $orderby, $join, $extra)->getResults();
+                $resArray = $STH->get($table, $fields, $values, $where, $orderby, $join, $extra)->getResults();
                 return $resArray; // Array filled with objects hydrated with the properties that match the query
             } else {
                 $this->_errors[] = 'There was no page specified in viewSongs call, fatal';
@@ -387,10 +406,12 @@ class SongManager {
     
     ##Creates a new grouping of Songs
     ##1 - Album, 2 - compilation
-    public function newGroup(array $song_id, $type, $name, $desc, $pTable = 'groups', $pKey = 'group_id'){
+    public function newGroup(array $song_id, $type, $name, $desc){
         $this->_errors = array();
         $STH = $this->getHandler();
         $user_id = $this->getUserID();
+        $pTable = 'groups';
+        $pKey = 'group_id';
         $tables = array('groups' => array('group_name', 'group_desc', 'type', 'user_id'),
                         'groups_lookup' => array('group_id', 'song_id', 'user_id')); //List of tables to insert (make sure lookup table is first)
         $groupData = array(':group_name' => $name, ':group_desc' => $desc, ':type' => $type, ':user_id' => $user_id); //IDs and group ids and stuff
@@ -412,16 +433,26 @@ class SongManager {
     }
     
     ##Returns name, description, and list of song IDs that are in the specified song
-    public function viewGroup($group_id, $members = FALSE, $songIdOnly = TRUE){
+    public function viewGroup($group_id, $members = FALSE, $songIdOnly = TRUE, $typeDescription = FALSE){
         $this->_errors = array();
         $STH = $this->getHandler();
         $table = 'groups';
         $fields = '*';
+        if ($typeDescription){
+            $fields = array('group_id', 'group_name', 'group_desc', 'user_id');
+            $type = $STH->get('groups_type', '*')->getResults();
+            $join = array(array('join_table' => 'group_type',
+                                'primary_key' => 'groups.type',
+                                'join_key' => 'group_type.type_id',
+                                'fields' => array('type_name', 'type_desc')));
+        } else {
+            $join = array();
+        }
         if (is_array($group_id)){
             foreach ($group_id as $key => $id){
                 $values = array(':group_id' => $id);
                 $where = array('group_id', '=', ':group_id');
-                $res[$key] = $STH->get($table, $fields, $values, $where)->getResults();
+                $res[$key] = $STH->get($table, $fields, $values, $where, array(), $join)->getResults();
                 //Get info from groups_lookup
                 if (count($res[$key]) == 1){
                     $res[$key] = $res[$key][0];
@@ -438,7 +469,7 @@ class SongManager {
         } else {
             $values = array(':group_id' => $group_id);
             $where = array('group_id', '=', ':group_id');
-            $res = $STH->get($table, $fields, $values, $where)->getResults();
+            $res = $STH->get($table, $fields, $values, $where, array(), $join)->getResults();
             //Get info from groups_lookup
             if (count($res) == 1){
                 $res = $res[0];
@@ -456,21 +487,57 @@ class SongManager {
         return $res;
     }
     
-    public function viewGroups($limits, $members = FALSE, $songIdOnly = TRUE, $orderby = ''){ //View? Adding some kind of filtration, like in the updatesongs call, but that seems too trivial for now
+    public function viewGroups($limits, $members = FALSE, $songIdOnly = TRUE, $typeDescription = TRUE, $user_id = NULL){ //View? Adding some kind of filtration, like in the updatesongs call, but that seems too trivial for now
         $this->_errors = array();
         $STH = $this->getHandler();
         $table = 'groups';
         $fields = '*';
         $where = array();
-        $join = '';
+        $orderby = array();
         if (!is_array($limits) && $limits = 'all'){
-            $resArray = $STH->get($table, $fields)->getResults();
+            if ($typeDescription){
+                $fields = array('group_id', 'group_name', 'group_desc', 'user_id');
+                $type = $STH->get('group_type', '*')->getResults();
+                $join = array(array('join_table' => 'group_type',
+                                    'primary_key' => 'groups.type',
+                                    'join_key' => 'group_type.type_id',
+                                    'fields' => array('type_name', 'type_desc')));
+            } else {
+                $join = array();
+            }
+            if (isset($user_id)){
+                $user_id = intval($user_id);
+                $values = array(':user_id' => $user_id);
+                $where = array('user_id', '=', ':user_id');
+            } else {
+                $values = array();
+                $where = array();
+            }
+            $resArray = $STH->get($table, $fields, $values, $where, array(), $join)->getResults();
             return $resArray; // Array filled with objects hydrated with the properties that match the query
         }
         if (array_key_exists('num_res', $limits)){
             if (array_key_exists('page', $limits)){
                 $pair = array('start' => ($limits['num_res'] * ($limits['page'] -1)), 'end' => ($limits['num_res'] * $limits['page']));
                 $extra = ' LIMIT '. $pair['start']. ', '. $limits['num_res'];
+                if ($typeDescription){
+                    $fields = array('group_id', 'group_name', 'group_desc', 'user_id');
+                    $type = $STH->get('group_type', '*')->getResults();
+                    $join = array(array('join_table' => 'group_type',
+                                        'primary_key' => 'groups.type',
+                                        'join_key' => 'group_type.type_id',
+                                        'fields' => array('type_name', 'type_desc')));
+                } else {
+                    $join = array();
+                }
+                if (isset($user_id)){
+                    $user_id = intval($user_id);
+                    $values = array(':user_id' => $user_id);
+                    $where = array('user_id', '=', ':user_id');
+                } else {
+                    $values = array();
+                    $where = array();
+                }
                 $resArray = $STH->get($table, $fields, array(), $where, $orderby, $join, $extra)->getResults();
                 return $resArray; // Array filled with objects hydrated with the properties that match the query
             } else {
@@ -483,6 +550,8 @@ class SongManager {
         }
     }
     
+    ##Updates groups and groups_lookup with data, requires two arrays with group information in them
+    ##'song_id' => array(), 'name' => string, 'desc' => string etc etc
     public function updateGroup($group_id, $user_id, array $old_group, array $new_group){
         $this->_errors = array();
         $STH = $this->getHandler();

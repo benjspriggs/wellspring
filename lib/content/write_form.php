@@ -20,6 +20,6 @@
             <input type="submit" name="submit" value="Upload">
         </div>
         <input type="hidden" id="token" name="token" value="<?=Token::csrf();?>">
-        <input id="action" name="action" value="addGroup" type="hidden">
+        <input type="hidden" id="action" name="action" value="addSong">
     </form>
 </div>

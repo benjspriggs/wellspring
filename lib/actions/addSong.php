@@ -34,7 +34,7 @@ if ($validate->passed()){
     $SM->addSong($songObj);
     $SM->getErrors();
 } else {
-    echo "Validation failed for the following reasongs:<br>";
+    echo "Validation failed for the following reasons:<br>";
     $validate->errors();
 }
 //header('Location: home.php');

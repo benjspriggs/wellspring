@@ -71,7 +71,11 @@ class StatementHandler {
         $sql = " ";
         foreach($join as $index => $info){
             if (is_array($info)){
-                $sql .= $join['type']." JOIN (`";
+                if (array_key_exists('type', $join)){
+                    $sql .= $join['type']." JOIN (`";
+                } else {
+                    $sql .= " JOIN (`";
+                }
                 $tbl = "";
                 $fields = "";
                 $conds = "";

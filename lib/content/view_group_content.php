@@ -21,9 +21,9 @@ if ($count < $num_res){
 }
 if ($count < ($page * $num_res)){
     //The request is invalid
-    echo "Sorry, but that page doesn't exist in the database of groups.<br>";
+    echo "<p id=\"error\">Sorry, but that page doesn't exist in the database of groups.</p><br>";
 } else {
-    $results = $SM->viewGroups(array('num_res' => $num_res, 'page' => $page), TRUE);
+    $results = $SM->viewGroups(array('num_res' => $num_res, 'page' => $page), TRUE, TRUE, TRUE);
     $total = ceil(($count/$num_res));
     
     echo "Showing page $page of $total. <br>";
@@ -39,7 +39,7 @@ if ($count < ($page * $num_res)){
         echo "<article class=\"group\">";
         echo "<h4><a href=\"group/view.php?group_id=". $group['group_id'] ."\">". $group['group_name'] ."</h4></a>";
         echo "<p>Description: ". $group['group_desc'] ."</p>";
-        echo "<span>Type: ". $group['type'] ."</span>";
+        echo "<span>Type: ". $group['type_name'] ."</span>";
         echo "</article>";
     }
 }

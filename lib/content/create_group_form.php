@@ -3,6 +3,7 @@ $STH = new StatementHandler($PDO);
 $SM = new SongManager($STH);
 $estimate = $STH->getEstimate('songs_meta', 'song_id');
 $res = $SM->viewSongs(array('num_res' => $estimate, 'page' => 1));
+$type = $STH->get('group_type', '*')->getResults();
 ?>
 <div id="grpcont">
     <form id="grpform" enctype="multipart/form-data" action="loading.php" method="POST">
@@ -11,8 +12,11 @@ $res = $SM->viewSongs(array('num_res' => $estimate, 'page' => 1));
             <input type="text" name="name" maxlength="40" placeholder="Group Name" required>
             <textarea name="desc" maxlength="500" placeholder="Group Description" required></textarea>
             <select name="type">
-                <option value="1" title="Recorded as a set, or relased as a set to the public - usually by one artist">Album</option>
-                <option value="2" title="Assorted songs that fit a mood or are complimentary">Compilation</option>
+                <?php
+                foreach ($type as $key => $info){
+                    echo "<option value=\"". $info['type_id'] ."\" title=\"". $info['type_desc'] ."\">". $info['type_name'] ."</option>";
+                }
+                ?>
             </select>
         </fieldset>
         <fieldset>
@@ -28,6 +32,6 @@ $res = $SM->viewSongs(array('num_res' => $estimate, 'page' => 1));
             <input type="submit" name="submit" value="Create Group">
         </div>
         <input type="hidden" id="token" name="token" value="<?=Token::csrf();?>">
-        <input id="action" name="action" value="addGroup" type="hidden">
+        <input type="hidden" id="action" name="action" value="addGroup">
     </form>
 </div>

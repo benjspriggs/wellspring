@@ -1,7 +1,6 @@
 <?php
 $STH = new StatementHandler($PDO);
 $user = new User($STH);
-$SM = new SongManager($STH);
 $validate = new Validate($STH);
 
 $name = Input::get('name');
@@ -27,10 +26,11 @@ if ($validate->passed()){
     } else {
         $user_id = 0;
     }
-    $SM->newGroup($song_id, $type, $name, $desc, $user_id);
+    $SM = new SongManager($STH, $user_id);
+    $SM->newGroup($song_id, $type, $name, $desc);
     $SM->getErrors();
 } else {
-    echo "Validation failed for the following reasongs:<br>";
+    echo "Validation failed for the following reasons:<br>";
     $validate->errors();
 }
 ?>
