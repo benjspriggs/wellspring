@@ -7,7 +7,7 @@ $res = $SM->viewSongs(array('num_res' => $estimate, 'page' => 1));
 <div id="grpcont">
     <form id="grpform" enctype="multipart/form-data" action="loading.php" method="POST">
         <fieldset>
-            <h3>Group information</h3>
+            <h3>Create a new Group</h3>
             <input type="text" name="name" maxlength="40" placeholder="Group Name" required>
             <textarea name="desc" maxlength="500" placeholder="Group Description" required></textarea>
             <select name="type">

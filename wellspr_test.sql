@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 21, 2014 at 10:03 PM
+-- Generation Time: Aug 21, 2014 at 09:06 AM
 -- Server version: 5.6.16
 -- PHP Version: 5.5.11
 
@@ -50,7 +50,8 @@ CREATE TABLE IF NOT EXISTS `groups` (
   `type` tinyint(4) NOT NULL,
   `user_id` int(255) unsigned NOT NULL,
   PRIMARY KEY (`group_id`),
-  KEY `user_id` (`user_id`)
+  KEY `user_id` (`user_id`),
+  FULLTEXT KEY `group_desc` (`group_desc`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --

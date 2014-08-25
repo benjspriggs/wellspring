@@ -12,18 +12,20 @@ if ($loggedin || $login_remember){
 }
 ?>
 <div id="header">
-    <h2><a href="home.php">Wellspring</a></h2>
+    <a href="home.php"><h2>Wellspring</h2></a>
     
     <ul id="nav"> <!-- Navigational bar -->
-        <a href="home.php"><li>home</li></a>
+        <li><a href="home.php" title="Go back to the homepage to view annoucements and other recent happenings in Wellspring!">home</a></li>
             
-        <a href="write.php"><li>write</li></a>
-        <a href="listen.php"><li>listen</li></a>
-        <a href="group/view.php"><li>groups</li></a>
+        <li><a href="write.php" title="Submit a new song to the Wellspring database, recorded by yourself, or someone else - with appropriate permissions, of course!">write</a></li>
+        <li><a href="listen.php" title="Browse through all of the songs in the Wellspring database!">listen</a></li>
+        <li>
+            <a href="group/view.php">groups</a>
             <ul class="child-header">
-                <a href="group/view.php"><li>view</li></a>
-                <a href="group/create.php"><li>create</li></a>
+                <a href="group/view.php" title="See all of the albums, compilations, and many other groupings of songs that have been submitted to Wellspring!"><li>view</li></a>
+                <a href="group/create.php" title="Submit a new grouping of songs - album, compilation, songs by a certain artist or recording group, songs from a certain region, whatever!"><li>create</li></a>
             </ul>
+        </li>
     </ul>
     
     <div id="login">

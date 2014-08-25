@@ -485,6 +485,21 @@ class SongManager {
     
     public function updateGroup($group_id, $user_id, array $old_group, array $new_group){
         $this->_errors = array();
+        $STH = $this->getHandler();
+        
+        $to_delete = array_diff($old_group['song_id'], $new_group['song_id']);
+        $to_insert = array_diff($new_group['song_id'], $old_group['song_id']);
+        $this->destroyGroup($group_id);
+        
+        $tables = array('groups' => array('group_name', 'group_desc', 'type', 'user_id'),
+                        'groups_lookup' => array('group_id', 'song_id', 'user_id')); //List of tables to insert (make sure lookup table is first)
+        $groupData = array(':group_name' => $name, ':group_desc' => $desc, ':type' => $type, ':user_id' => $user_id); //IDs and group ids and stuff
+        $data['groups'] = $groupData;
+        
+        foreach ($song_id as $index => $id){
+            $data['groups_lookup'][] = array(':group_id' => 'LAST_INSERT_ID()', ':song_id' => $id, ':user_id' => $user_id);
+        }
+        $STH->getErrors();
     }
     
     public function songIdentity($song_id){
