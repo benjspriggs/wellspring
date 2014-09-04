@@ -1,11 +1,17 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.12
+-- version 4.0.4.1
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Sep 04, 2014 at 07:54 AM
 -- Server version: 5.6.16
 -- PHP Version: 5.5.11
+=======
+-- Generation Time: Aug 26, 2014 at 04:38 AM
+-- Server version: 5.5.32
+-- PHP Version: 5.4.19
+>>>>>>> origin/business-branch
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +25,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `wellspr_test`
 --
+CREATE DATABASE IF NOT EXISTS `wellspr_test` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `wellspr_test`;
 
 -- --------------------------------------------------------
 
@@ -52,16 +60,29 @@ CREATE TABLE IF NOT EXISTS `groups` (
   PRIMARY KEY (`group_id`),
   KEY `user_id` (`user_id`),
   KEY `type` (`type`)
+<<<<<<< HEAD
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+=======
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=9 ;
+>>>>>>> origin/business-branch
 
 --
 -- Dumping data for table `groups`
 --
 
 INSERT INTO `groups` (`group_id`, `group_name`, `group_desc`, `type`, `user_id`) VALUES
+<<<<<<< HEAD
 (5, 'YES', 'FINALLY', 1, 1),
 (8, 'a', 'b', 1, 1),
 (9, 'Cool, dood', 'yeah', 2, 0);
+=======
+(1, 'test', 'this is a test', 2, 1),
+(2, 'test', 'this is a test', 2, 1),
+(3, 'test', 'this is a test', 2, 1),
+(4, 'test', 'this is a test', 2, 1),
+(5, 'YES', 'FINALLY', 1, 0),
+(8, 'a', 'b', 1, 1);
+>>>>>>> origin/business-branch
 
 -- --------------------------------------------------------
 
@@ -83,9 +104,33 @@ CREATE TABLE IF NOT EXISTS `groups_lookup` (
 --
 
 INSERT INTO `groups_lookup` (`group_id`, `song_id`, `user_id`) VALUES
+<<<<<<< HEAD
 (9, 37, 0),
 (9, 49, 0),
 (9, 50, 0);
+=======
+(1, 30, 1),
+(1, 32, 1),
+(1, 33, 1),
+(1, 34, 1),
+(2, 30, 1),
+(2, 32, 1),
+(2, 33, 1),
+(2, 34, 1),
+(3, 30, 1),
+(3, 32, 1),
+(3, 33, 1),
+(3, 34, 1),
+(4, 30, 1),
+(4, 32, 1),
+(4, 33, 1),
+(4, 34, 1),
+(5, 30, 0),
+(5, 33, 0),
+(8, 33, 1),
+(8, 38, 1),
+(8, 48, 1);
+>>>>>>> origin/business-branch
 
 -- --------------------------------------------------------
 
@@ -153,7 +198,18 @@ CREATE TABLE IF NOT EXISTS `session_data` (
   `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`)
+<<<<<<< HEAD
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+=======
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+
+--
+-- Dumping data for table `session_data`
+--
+
+INSERT INTO `session_data` (`id`, `user_id`, `token`, `timestamp`) VALUES
+(1, 1, 'b04cf05eaa1b6435607092ef5982c845', '2014-08-25 21:17:44');
+>>>>>>> origin/business-branch
 
 -- --------------------------------------------------------
 
