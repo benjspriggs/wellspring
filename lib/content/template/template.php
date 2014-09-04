@@ -11,15 +11,14 @@ ob_flush();
         <title><?php echo $t->getName();?></title>
         <meta charset="utf-8">
         <base href="<?=Config::get('root_link/site')?>" />
-        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/normalize.css">    
+        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/normalize.css">
+        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/header.css">
         <?php
         foreach ($t->getCss() as $file => $name){
             echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::get('root_link/content') ."css/". $name .".css\">\n";
         }
         
         ?>
-        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/header.css">
-        <!-- You're going to need a way for the search bar to be checked if it has any data in it -->
         <!-- Don't forget the meta tags, and Google Font API links! -->
         <!-- Favicon info, make sure to name the .ico file favicon.ico for IE6 peeps -->
         <?php
@@ -37,7 +36,7 @@ ob_flush();
     
     <body>
         <div class="page">
-            <?php include_once(Config::get('root/content').'incl/header.php');?>
+            <?php include(Config::get('root/content').'incl/header.php');?>
             <div id="content">
                 <?php $path = $t->getContent(); include_once(Config::get('root/content'). "$path");?>
             </div>

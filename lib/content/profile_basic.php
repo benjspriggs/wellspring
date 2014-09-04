@@ -12,6 +12,7 @@ foreach (Config::get('tables/content') as $index => $tableName){
 ?>
 <h2><?php echo $name;?></h2>
 <p>The number of things <?=$name?> is associated with is: <?=$count?></p>
+<a href="user/edit.php?user_id=<?=$user_id?>">Edit account details</a>
 <h3>Groups</h3>
 <?php
 include(Config::get('root/content').'group_view_attribute_basic.php');

@@ -154,6 +154,23 @@ class User {
         }
     }
     
+    public function getUserInfo($user){
+        $this->clearErrors();
+        $STH = $this->STH;
+        if (is_string(intval($user))){
+            $user_id = $this->getUserID($user);
+            $results = $STH->get('users', '*', array('user_id' => $user_id), array('user_id', '=', ':user_id'))->getResults();
+            return $results[0];
+        } elseif (is_numeric($user)){
+            $results = $STH->get('users', '*', array('user_id' => $user), array('user_id', '=', ':user_id'))->getResults();
+            return $results[0];
+        } else {
+            $this->errors[] = "The provided user information did not match the types required.";
+            return $this;
+        }
+    }
+    
+    ##Lists all rows in database with records attributed to a user_id
     public function attribute($user_id, $table){
         $this->clearErrors();
         $STH = $this->STH;
@@ -292,14 +309,35 @@ class User {
     
     public function deleteUser($id){
         $this->clearErrors();
-        //Check if the user exists
-        //The user's already been asked whether or not they want to delete thier records, and it's been vaildated
-        //Delete records
-        //Send e-mail with notice of removal
+        $STH = $this->STH;
+        foreach(Config::get('tables/content') as $index => $table){
+            //Update all the places with user_id, and set it to 0
+            $STH->update($table, array('user_id'), array('user_id' => 0), array('user_id', '=', $id));
+        }
+        $email = $STH->get('users', array('email'), array(':user_id' => $id), array('user_id', '=', ':user_id'))->getResults();
+        $email = $email[0]['email'];
+        $STH->delete('users', array(':user_id' => $id), array('user_id', '=', ':user_id'));
+        $STH->getErrors();
+        Mail::notice($email, 'deleteUser');
+        return $this;
     }
     
-    public function editUser(){
+    public function updateUser($user_id, $info){
         $this->clearErrors();
+        $STH = $this->STH;
+        $fields = array();
+        if (array_key_exists('username', $info)){
+            $fields[] = 'username';
+        }
+        if (array_key_exists('password', $info)){
+            $fields[] = 'password';
+        }
+        if (array_key_exists('email', $info)){
+            $fields[] = 'email';
+        }
+        $STH->update('users', $fields, $info, array('user_id', '=', $user_id));
+        $STH->getErrors();
+        return $this;
     }
 }
 ?>

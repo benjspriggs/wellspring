@@ -21,6 +21,7 @@
 #nav li {
    display: inline-block;
    vertical-align: text-top;
+   padding: .4em;
 }
 
 #nav li a, #nav li a:visited {
@@ -51,17 +52,18 @@
    display: block;
    padding: 0;
    font-size: 1em;
-   width: 4em;
+   height: auto;
+   max-width: 4em;
    overflow: hidden;
    background: rgba(168, 212, 255, .4);
 }
 
 .child-header:hover {
-   height: 4em;
+   max-height: 5em;
 }
 
 .child-header {
-   height: 0;
+   max-height: .2em;
    -webkit-transition: .5s all;
    -moz-transition: .5s all;
    -ms-transition: .5s all;
@@ -70,7 +72,7 @@
 }
 
 a:hover + .child-header {
-   height: 4em;
+   max-height: 5em;
    -webkit-transition: .5s all;
    -moz-transition: .5s all;
    -ms-transition: .5s all;
