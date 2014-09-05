@@ -564,6 +564,7 @@ class SongManager {
         $STH = $this->getHandler();
         $user_id = $this->getUserID();
         
+<<<<<<< HEAD
         if ($old_group['members'] != NULL){
             $to_delete = array_diff($old_group['members'], $new_group['members']);
             $to_insert = array_diff($new_group['members'], $old_group['members']);
@@ -574,6 +575,12 @@ class SongManager {
         
         
         foreach ((array)$to_delete as $index => $to_delete_id){
+=======
+        $to_delete = array_diff($old_group['members'], $new_group['members']);
+        $to_insert = array_diff($new_group['members'], $old_group['members']);
+        
+        foreach ($to_delete as $index => $to_delete_id){
+>>>>>>> origin/business-branch
             $values = array('song_id', '=', ':song_id');
             $where = array(':song_id' => $to_delete_id);
             $STH->delete('groups_lookup', $values, $where);

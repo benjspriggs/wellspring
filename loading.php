@@ -26,6 +26,10 @@ if (Token::check(Input::get('token'))){
 //    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
 //}
 
+if (!empty($_SERVER['HTTP_REFERER'])) {
+    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
+}
+
 switch (Input::get('action')){
     case("addSong"):
         echo "<a href=\"write.php\">Return to upload page</a>";

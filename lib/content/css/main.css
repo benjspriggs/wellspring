@@ -60,10 +60,13 @@ video {
    max-height: 100%;
 }
 
+<<<<<<< HEAD
 fieldset {
    background: white;
 }
 
+=======
+>>>>>>> origin/business-branch
 .page {
    max-width: 90%;
    margin: -50px auto;
