@@ -303,7 +303,7 @@ class SongManager {
     }
     
     ##Limits array: Start (min), Num_res (max), Page (default 1)
-    public function viewSongs($limits, $view = 'text', $sortby = '', $user_id = ''){
+    public function viewSongs($limits, $view = 'text', $sortby = '', $user_id = NULL){
         //Get all of the data from the DB
         $this->_errors = array();
         $STH = $this->getHandler();
@@ -424,12 +424,18 @@ class SongManager {
         $STH->insert($tables, $data, $pTable, $pKey);
         return $this;
     }
-    public function destroyGroup($group_id, $table = 'groups'){
+    public function destroyGroup($group_id, $user_id){
         $this->_errors = array();
         $STH = $this->getHandler();
-        $where = array('group_id', '=', $group_id);
-        $STH->delete($table, NULL, $where);
-        return $this;
+        if ($user_id > 0){
+            $where = array('group_id', '=', $group_id);
+            $STH->delete('groups', NULL, $where);
+            return $this;
+        } else {
+            $this->_errors[] = "Cannot delete group from anonymous account.";
+            return $this;
+        }
+        
     }
     
     ##Returns name, description, and list of song IDs that are in the specified song
@@ -440,7 +446,7 @@ class SongManager {
         $fields = '*';
         if ($typeDescription){
             $fields = array('group_id', 'group_name', 'group_desc', 'user_id');
-            $type = $STH->get('groups_type', '*')->getResults();
+            $type = $STH->get('group_type', '*')->getResults();
             $join = array(array('join_table' => 'group_type',
                                 'primary_key' => 'groups.type',
                                 'join_key' => 'group_type.type_id',
@@ -487,6 +493,7 @@ class SongManager {
         return $res;
     }
     
+    ##Indescriminate viewing function for groups
     public function viewGroups($limits, $members = FALSE, $songIdOnly = TRUE, $typeDescription = TRUE, $user_id = NULL){ //View? Adding some kind of filtration, like in the updatesongs call, but that seems too trivial for now
         $this->_errors = array();
         $STH = $this->getHandler();
@@ -551,23 +558,41 @@ class SongManager {
     }
     
     ##Updates groups and groups_lookup with data, requires two arrays with group information in them
-    ##'song_id' => array(), 'name' => string, 'desc' => string etc etc
-    public function updateGroup($group_id, $user_id, array $old_group, array $new_group){
+    ##'members' => array(), 'name' => string, 'desc' => string etc etc
+    public function updateGroup($group_id, array $old_group, array $new_group){
         $this->_errors = array();
         $STH = $this->getHandler();
+        $user_id = $this->getUserID();
         
-        $to_delete = array_diff($old_group['song_id'], $new_group['song_id']);
-        $to_insert = array_diff($new_group['song_id'], $old_group['song_id']);
-        $this->destroyGroup($group_id);
+        if ($old_group['members'] != NULL){
+            $to_delete = array_diff($old_group['members'], $new_group['members']);
+            $to_insert = array_diff($new_group['members'], $old_group['members']);
+        } elseif ($old_group['members'] == NULL){
+            $to_insert = $new_group['members'];
+            $to_delete = NULL;
+        } 
         
-        $tables = array('groups' => array('group_name', 'group_desc', 'type', 'user_id'),
+        
+        foreach ((array)$to_delete as $index => $to_delete_id){
+            $values = array('song_id', '=', ':song_id');
+            $where = array(':song_id' => $to_delete_id);
+            $STH->delete('groups_lookup', $values, $where);
+        }
+        
+        $name = $new_group['name'];
+        $desc = $new_group['desc'];
+        $type = $new_group['type'];
+        
+        $tables = array('groups' => array('group_id', 'group_name', 'group_desc', 'type', 'user_id'),
                         'groups_lookup' => array('group_id', 'song_id', 'user_id')); //List of tables to insert (make sure lookup table is first)
-        $groupData = array(':group_name' => $name, ':group_desc' => $desc, ':type' => $type, ':user_id' => $user_id); //IDs and group ids and stuff
+        $groupData = array(':group_id' => $group_id, ':group_name' => $name, ':group_desc' => $desc, ':type' => $type, ':user_id' => $user_id); //IDs and group ids and stuff
         $data['groups'] = $groupData;
         
-        foreach ($song_id as $index => $id){
-            $data['groups_lookup'][] = array(':group_id' => 'LAST_INSERT_ID()', ':song_id' => $id, ':user_id' => $user_id);
+        foreach ($to_insert as $index => $id){
+            $data['groups_lookup'][] = array(':group_id' => $group_id, ':song_id' => $id, ':user_id' => $user_id);
         }
+        
+        $STH->insert($tables, $data, 'groups', 'group_id', TRUE);
         $STH->getErrors();
     }
     

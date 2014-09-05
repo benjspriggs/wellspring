@@ -48,9 +48,9 @@ if ($validate->passed()){
     }
     
     $SM->updateSong($songObj, $id, $user_id);
-    echo $SM->getErrors();
+    $SM->getErrors();
 } else {
-    echo "Validation failed for the following reasongs:<br>";
+    echo "Validation failed for the following reasons:<br>";
     $validate->errors();
 }
 ?>
