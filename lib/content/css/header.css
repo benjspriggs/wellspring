@@ -26,7 +26,15 @@
 #nav li {
    display: inline-block;
    vertical-align: text-top;
+<<<<<<< HEAD
    padding: .3em;
+=======
+<<<<<<< HEAD
+   padding: .3em;
+=======
+   padding: .4em;
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
 }
 
 #nav li a, #nav li a:visited {
@@ -69,18 +77,46 @@
 
 .child-header {
    max-height: .2em;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/business-branch
    -webkit-transition: .4s all;
    -moz-transition: .4s all;
    -ms-transition: .4s all;
    -o-transition: .4s all;
    transition: .4s all;
+<<<<<<< HEAD
+=======
+=======
+   -webkit-transition: .5s all;
+   -moz-transition: .5s all;
+   -ms-transition: .5s all;
+   -o-transition: .5s all;
+   transition: .5s all;
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
 }
 
 a:hover + .child-header {
    max-height: 5em;
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/business-branch
    -webkit-transition: .4s all;
    -moz-transition: .4s all;
    -ms-transition: .4s all;
    -o-transition: .4s all;
    transition: .4s all;
+<<<<<<< HEAD
+=======
+=======
+   -webkit-transition: .5s all;
+   -moz-transition: .5s all;
+   -ms-transition: .5s all;
+   -o-transition: .5s all;
+   transition: .5s all;
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
 }

@@ -19,7 +19,14 @@ ob_flush();
         }
         
         ?>
+<<<<<<< HEAD
         <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/mobile.css">
+=======
+<<<<<<< HEAD
+        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/mobile.css">
+=======
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
         <!-- Don't forget the meta tags, and Google Font API links! -->
         <!-- Favicon info, make sure to name the .ico file favicon.ico for IE6 peeps -->
         <?php

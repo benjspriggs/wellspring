@@ -26,9 +26,21 @@ if ($members){
     $token = Token::csrf();
     echo "<form id=\"deleteform\" action=\"loading.php\" method=\"POST\">
         <div id=\"delete\">
+<<<<<<< HEAD
             <input type=\"submit\" name=\"delete\" value=\"Delete Group\">
             <input type=\"hidden\" id=\"info\" name=\"info\" value=". htmlspecialchars(json_encode($view)). ">
             <input type=\"hidden\" id=\"action\" name=\"action\" value=\"deleteGroup\">
+=======
+<<<<<<< HEAD
+            <input type=\"submit\" name=\"delete\" value=\"Delete Group\">
+            <input type=\"hidden\" id=\"info\" name=\"info\" value=". htmlspecialchars(json_encode($view)). ">
+            <input type=\"hidden\" id=\"action\" name=\"action\" value=\"deleteGroup\">
+=======
+            <input type=\"submit\" name=\"delete\" value=\"Delete Song\">
+            <input type=\"hidden\" id=\"info\" name=\"info\" value=". htmlspecialchars(json_encode($r)). ">
+            <input type=\"hidden\" id=\"action\" name=\"action\" value=\"deleteSong\">
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
             <input type=\"hidden\" id=\"token\" name=\"token\" value=\"". $token ."\">
         </div>
     </form>";

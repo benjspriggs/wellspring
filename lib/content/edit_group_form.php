@@ -6,6 +6,10 @@ $r = $SM->viewGroup($i, TRUE, TRUE);
 $name = $r['group_name'];
 $desc = $r['group_desc'];
 $type = $r['type'];
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/business-branch
 if (!empty($r['members'])){
     foreach ($r['members'] as $index => $song_index_id){
         $members[] = $r['members'][$index][0];
@@ -27,6 +31,24 @@ if (!empty($r['members'])){
             <label for="name">Group Name:</label><input name="name" id="name" value="<?=$name?>" placeholder="Group name"><br>
             <label for="desc">Group Description:</label><textarea name="desc" id="desc" placeholder="Group description"><?=$desc?></textarea><br>
             <label for="type">Group Type:</label><select name="type" id="type">
+<<<<<<< HEAD
+=======
+=======
+foreach ($r['members'] as $index => $song_index_id){
+    $members[] = $r['members'][$index][0];
+}
+$r['members'] = $members;
+?>
+
+<div id="editcont">
+    <h3>Edit song <?=$name?></h3>
+    <form id="editform" enctype="multipart/form-data" action="loading.php" method="POST">
+        <ul>
+            <input name="name" id="name" value="<?=$name?>" placeholder="Group name"><br>
+            <textarea name="desc" id="desc" placeholder="Group description"><?=$desc?></textarea><br>
+            <select name="type">
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
                 <?php
                 $type = $STH->get('group_type', '*')->getResults();
                 foreach ($type as $key => $info){
@@ -38,14 +60,29 @@ if (!empty($r['members'])){
                 }
                 ?>
             </select>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/business-branch
         </fieldset>
         <fieldset>
         <?php
         if (!empty($members)){
+<<<<<<< HEAD
+=======
+=======
+        </ul>
+        <?php
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
             //Song checkboxes
             $estimate = $STH->getEstimate('songs_meta', 'song_id');
             $res = $SM->viewSongs(array('num_res' => $estimate, 'page' => 1));
             
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/business-branch
             echo "<ul id=\"flex-cont\">";
             foreach($res as $index => $song_info){
                 echo "<li><input type=\"checkbox\" name=\"song_id[]\" value=\"". $song_info['song_id'] ."\"";
@@ -68,6 +105,20 @@ if (!empty($r['members'])){
         ?>
         </fieldset>
         <div name="submit" id="submit">
+<<<<<<< HEAD
+=======
+=======
+            foreach($res as $index => $song_info){
+                echo "<input type=\"checkbox\" name=\"song_id[]\" value=\"". $song_info['song_id'] ."\"";
+                if (in_array($song_info['song_id'], $members)){
+                    echo " checked ";
+                }
+                echo ">". $song_info['song_name'] ."<br>\n";
+            }
+        ?>
+        <div id="submit">
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
             <input type="submit" name="submit" value="Update">
         </div>
         <input type="hidden" id="info" name="info" value="<?=htmlspecialchars(json_encode($r))?>">

@@ -25,6 +25,13 @@ if (Token::check(Input::get('token'))){
 //if (!empty($_SERVER['HTTP_REFERER'])) {
 //    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
 //}
+<<<<<<< HEAD
+=======
+
+if (!empty($_SERVER['HTTP_REFERER'])) {
+    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
+}
+>>>>>>> origin/business-branch
 
 switch (Input::get('action')){
     case("addSong"):
