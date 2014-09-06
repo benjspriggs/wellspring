@@ -22,9 +22,10 @@ if (Token::check(Input::get('token'))){
     echo 'CSRF test failed.<br>';
 }
 ##Uncomment to automatically redirect after error/ success page
-//if (!empty($_SERVER['HTTP_REFERER'])) {
-//    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
-//}
+if (!empty($_SERVER['HTTP_REFERER'])) {
+    echo 'PREPARE FOR REDIRECTION. RESISTANCE IS FUTILE. T-MINUS 5 SECONDS.<br>';
+    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
+}
 
 switch (Input::get('action')){
     case("addSong"):
