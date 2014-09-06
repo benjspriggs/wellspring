@@ -1,0 +1,24 @@
+#field {
+    display: inline-block;
+    padding: 5px 10% 0 10%;
+    width: 80%;
+    clear: both;
+    font-size: 1.5em;
+}
+
+#field input {
+    float: left;
+}
+
+#scrollable {
+    overflow: scroll;
+    -webkit-column-count: 3; /* Chrome, Safari, Opera */
+    -moz-column-count: 3; /* Firefox */
+    column-count: 3;
+    -webkit-column-gap: 40px; /* Chrome, Safari, Opera */
+    -moz-column-gap: 40px; /* Firefox */
+    column-gap: 40px;
+    -webkit-column-rule: 4px outset #ff00ff; /* Chrome, Safari, Opera */
+    -moz-column-rule: 4px outset #ff00ff; /* Firefox */
+    column-rule: 4px outset #ff00ff;
+}

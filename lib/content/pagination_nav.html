@@ -1,0 +1,26 @@
+<form id="pagination" action="" method="get" oninput="checkFilled()">
+    <input type="text" max="3" id="page" name="page" value="<?php if (isset($_GET["page"])){echo htmlspecialchars($_GET["page"]);}?>" placeholder="Page number">
+    <input type="text" max="5" id="num_res" name="num_res" value="<?php if (isset($_GET["num_res"])){echo htmlspecialchars($_GET["num_res"]);}?>" placeholder="Number of results">
+    <input type="submit" value="Update" id="update" disabled="disabled">
+    <!--<button name="next" id="next" onclick="window.location = """>Next</button>
+    <button name="prev" id="prev" onclick="window.location = """>Prev</button>-->
+</form>
+<script>
+    function checkFilled(){
+        $('form#pagination > input').keyup(function(){
+           var empty = false;
+           
+           $('form#pagination > input').each(function(){
+            if ($(this).val() == '') {
+                empty = true;
+            }
+           });
+           
+           if (empty) {
+            $('#update').attr('disabled', 'disabled');
+           } else {
+            $('#update').removeAttr('disabled');
+           }
+        });
+    };
+</script>

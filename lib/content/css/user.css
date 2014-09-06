@@ -1,0 +1,13 @@
+.flex-box {
+    display: flex;
+    flex-flow: row;
+}
+
+.group {
+    width: 30%;
+}
+
+.song {
+    width: 40%;
+    padding: 1em;
+}

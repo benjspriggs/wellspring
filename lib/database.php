@@ -1,9 +1,9 @@
 <?php
 
-define('hostname', 'spricoco.ipowermysql.com');
-define('username', 'dmanager');
-define('database', 'digitize');
-define('password', 'benja+cole');
+define('hostname', 'localhost');
+define('username', 'root');
+define('database', 'wellspr_test');
+define('password', '9ahil30jxm1');
 
 try {
     //Attempt to create mysql connection to database

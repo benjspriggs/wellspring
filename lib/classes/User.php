@@ -29,11 +29,21 @@ class User {
         $this->_errors = array();
     }
     
+    public function hasErrors(){
+        if (!empty($this->_errors)){
+            return TRUE;
+        } else {
+            return FALSE;
+        }
+    }
+    
     public function getErrors(){
         if (!empty($this->_errors)){
             foreach($this->_errors as $errorkey => $text){
                 echo $text ."<br>";
             }
+        } else {
+            return NULL;
         }
     }
     
@@ -54,19 +64,20 @@ class User {
         $this->clearErrors();
         $STH = $this->STH;
         $dbhash = $this->getDBHash($userid); //Session data
-        $exists = $this->getUsername($userid);
-        if ($exists != NULL){
+        $username = $this->getUsername($userid);
+        if ($username != NULL){
             if ($dbhash != NULL){
-                if (Session::get(Config::get('session/session_name')) == $dbhash){
-                    if (Session::get(Config::get('session/session_name')) + md5(uniqid(self::getUsername($userid))) === Cookie::get(Config::get('remember/cookie_name'))){
+                $token = Session::get(Config::get('session/session_name'));
+                if ($token == $dbhash){
+                    if (Hash::encode($username, $token) == Cookie::get(Config::get('remember/cookie_name'))){
                         //The user is logged in and remembered
                         return 3;
                     }
                     //The user is logged in successfully
                     return 2;
                 } else {
-                    $this->_errors[] = "The record exists but the session data does not match.";
-                    return 1;
+                    $this->_errors[] = "The record exists but the session data does not match. Possibly logged in on another browser.";
+                    return 1.5;
                 }
             } else {
                 //Session data has not been created, and the user has not logged in anywhere else
@@ -105,6 +116,32 @@ class User {
         }
     }
     
+    public function isAdmin($userid){
+        $this->clearErrors();
+        $STH = $this->STH;
+        $res = $STH->get('users', array('is_admin'), array('user_id' => $userid), array('user_id', '=', ':user_id'))->getResults();
+        if ($res[0]['is_admin'] == 1){
+            return TRUE;
+        } elseif ($res[0]['is_admin'] == 0) {
+            return FALSE;
+        } else {
+            return FALSE;
+        }
+    }
+    
+    //public function status($userid, $condition){
+    //    $this->clearErrors();
+    //    $STH = $this->STH;
+    //    $res = $STH->get('users', array('is_'. $condition), array('user_id' => $userid), array('user_id', '=', ':user_id'))->getResults();
+    //    if ($res[0]['is_'.$condition] == 1){
+    //        return TRUE;
+    //    } elseif ($res[0]['is_'. $condition] == 0) {
+    //        return FALSE;
+    //    } else {
+    //        return FALSE;
+    //    }
+    //}
+    
     public function getUserID($username){
         $this->clearErrors();
         $STH = $this->STH;
@@ -115,6 +152,15 @@ class User {
         } else {
             return NULL;
         }
+    }
+    
+    public function attribute($user_id, $table){
+        $this->clearErrors();
+        $STH = $this->STH;
+        $values = array(':user_id' => $user_id);
+        $where = array('user_id', '=', ':user_id');
+        $results = $STH->get($table, 'user_id', $values, $where)->getResults();
+        return $results;
     }
     
     public function logIn($username, $password, $remember = FALSE){
@@ -136,8 +182,6 @@ class User {
             $dbhash = $dbres[0]['pass'];
             $salt = $dbres[0]['salt'];
             if ($validate->passed()){
-                //$password = Hash::encode($password, $salt);
-                //echo "DB Hash is :$dbhash <br>Password is:$password";
                 if ($dbhash == $password){
                     $this->loggedin = TRUE;
                     $token = Token::generate();
@@ -148,15 +192,14 @@ class User {
                     $STH->insert('session_data', array('user_id' => $user_id, 'token' => $token));
                     
                     if ($remember){
-                        $cookie = $token . md5(uniqid($username));
-                        Cookie::create(Config::get('remember/cookie_name'), $token);
+                        $cookie = Hash::encode($username, $token);
+                        Cookie::create(Config::get('remember/cookie_name'), $cookie);
+                        Cookie::create('id', $user_id);
                     }
                     
                     return $this;
                 } else {
                     $this->_errors[] = "The hashes did not match.";
-                    echo "DB hash is:$dbhash<br>";
-                    echo "Password is:$password<br>";
                 }
             } else {
                 $this->_errors[] = "The information passed was not valid.";
@@ -173,6 +216,7 @@ class User {
         switch($this->isLoggedIn($id)){
             case(3):
                 Cookie::destroy(Config::get('remember/cookie_name'));
+                Cookie::destroy('id');
             case(2):
                 //BLOW IT UP DOOD
                 Session::destroy(Config::get('session/session_name'));

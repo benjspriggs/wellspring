@@ -20,8 +20,10 @@ class SongManager {
     }
     
     public function getErrors(){
-        foreach($this->_errors as $key){
-            echo "<br>". $key ."<br>";
+        if (!empty($this->_errors)){
+            foreach($this->_errors as $key){
+                echo "<br>". $key ."<br>";
+            }
         }
     }
     
@@ -67,15 +69,15 @@ class SongManager {
         foreach ($files['name'] as $key => $name){
                 if ($files['error'][$key] == 0){
                         $uploaded[] = $name;
-                        $path[] = "/uploads/". $song_name ."/";
+                        $path[] = $song_name ."/";
                         
-                        foreach ($path as $key => $name){
-                            $filepath = Config::get('app/root').$path[$key];
-                            if(!is_dir($filepath)){
+                        foreach ($path as $key => $filename){
+                            $filepath = Config::get('root/uploads') . $filename;
+                            if (!is_dir($filepath)){
                                 mkdir($filepath);
                             }
-                            if (move_uploaded_file($files['tmp_name'][$key], $filepath.$uploaded[$key])){
-                                    $success_path[] = $path[$key];
+                            if (move_uploaded_file($files['tmp_name'][$key], $filepath . $uploaded[$key])){
+                                    $success_path[] = $filename;
                             } else {
                                 $this->_errors[] = "$name was not uploaded successfuly.";
                             }
@@ -115,9 +117,28 @@ class SongManager {
         return $songObj;
     }
     
+    ##Removes media (singular and plural) from the database
+    public function removeFiles($media_id){
+        $this->_errors[] = array();
+        $STH = $this->getHandler();
+        $table = 'media';
+        $where = array('media_id', '=', ':media_id');
+        if (is_array($media_id)){
+            foreach($media_id as $index => $id){
+                $values = array('media_id' => $id);
+                $STH->delete($table, $values, $where);
+            }
+        } else {
+            $values = array('media_id' => $media_id);
+            $STH->delete($table, $values, $where);
+        }
+        
+        return $this;
+    }
+    
     private function generateView($view = 'text', $sortby = '', $exclusive = FALSE){
         $this->clearView();
-        if($exclusive){
+        if ($exclusive){
             $exclusive = '';
         } else {
             $exclusive = 'LEFT';
@@ -128,7 +149,7 @@ class SongManager {
                 $this->_where = array('song_id', '=', ':song_id');
                 $this->_join = array();
                 break;
-            case ('text_extended'):
+            case ('full'):
                 $this->_fields = array('song_name', 'song_desc', 'lyrics', 'postdate', 'timestamp', 'song_id');
                 $this->_where = array('songs_meta.song_id', '=', ':song_id');
                 $this->_join = array(array('join_table' => 'tags',
@@ -138,28 +159,13 @@ class SongManager {
                                      array('join_table' => 'embeds',
                                             'primary_key' => 'songs_meta.song_id',
                                             'join_key' => 'embeds.song_id',
-                                            'fields' => array('embeds')), 'type' => $exclusive);
-                break;
-            case ('full'):
-                $this->_fields = array('song_name', 'song_desc', 'lyrics', 'postdate', 'timestamp', 'song_id');
-                $this->_where = array('songs_meta.song_id', '=', ':song_id');
-                $this->_join = array(array('join_table' => 'tags',
-                                           'primary_key' => 'songs_meta.song_id',
-                                           'join_key' => 'tags.song_id',
-                                           'fields' => array('tags')),
-                                     array('join_table' => 'embeds',
-                                           'primary_key' => 'songs_meta.song_id',
-                                           'join_key' => 'embeds.song_id',
-                                           'fields' => array('embeds')),
-                                     array('join_table' => 'media',
-                                           'primary_key' => 'songs_meta.song_id',
-                                           'join_key' => 'media.song_id',
-                                           'fields' => array('media_name', 'filetype')), 'type' => $exclusive);
+                                            'fields' => array('embeds')),
+                                     'type' => $exclusive);
                 break;
             case ('media'):
-                $this->_fields = array('song_name', 'song_desc', 'lyrics', 'song_id', 'songs_meta.song_id');
-                $this->_where = array('songs.meta.song_id', '=', ':song_id');
-                $this->_join = array(array('join_table' => 'media', 'primary_key' => 'songs_meta.song_id', 'join_key' => 'media.song_id', 'fields' => array('media_name', 'filetype')), 'type' => $exclusive);
+                $this->_fields = array('media_name', 'filetype', 'media_id');
+                $this->_where = array('media.song_id', '=', ':song_id');
+                $this->_join = array();
                 break;
             default:
                 return $this;
@@ -181,12 +187,31 @@ class SongManager {
         }
     }
     
-    public function exists($song_id){
+    public function exists($id, $type = 'song'){
+        $this->_errors = array();
+        $STH = $this->getHandler();
+        switch ($type){
+            case('song'):
+                $STH->get('songs_meta', '*', array('song_id' => $id), array('song_id', '=', ':song_id'));
+                break;
+            case('group'):
+                $STH->get('groups', '*', array('group_id' => $id), array('group_id', '=', ':group_id'));
+                break;
+        }
+        $results = $STH->getResults();
+        if (empty($results)){
+            return FALSE;
+        } else {
+            return TRUE;
+        }
+    }
+    
+    public function hasMedia($song_id){
         $this->_errors = array();
         $STH = $this->STH;
-        $STH->get('songs_meta', '*', array('song_id' => $song_id), array('song_id', '=', ':song_id'));
+        $STH->get('media', 'media_id', array('song_id' => $song_id), array('song_id', '=', ':song_id'));
         $results = $STH->getResults();
-        if(empty($results)){
+        if (empty($results)){
             return FALSE;
         } else {
             return TRUE;
@@ -196,33 +221,36 @@ class SongManager {
     public function addSong(Song $songObj){
         $this->_errors = array();
         $STH = $this->getHandler();
-        $PDO = $STH->getConnection();
         $user_id = $this->getUserID();
+        $date = date("Y-m-d H:i:s");
         $songData = array(":user_id" => $user_id,
                           ":song_name" => $songObj->song_name,
                           ":song_desc" => $songObj->song_desc,
-                          ":lyrics" => $songObj->lyrics);
-        $tables = array('songs_meta' => array('user_id', 'song_name', 'song_desc', 'lyrics'));
+                          ":lyrics" => $songObj->lyrics,
+                          ":postdate" => $date);
+        $tables = array('songs_meta' => array('user_id', 'song_name', 'song_desc', 'lyrics', 'postdate'));
         $data['songs_meta'] = $songData;
         
-        if(!empty($songObj->tags)){
+        if (!empty($songObj->tags)){
+            $tables['tags'] = array('song_id', 'user_id', 'tags', 'postdate');
             $tagData = array(":tags" => $songObj->tags,
                              ":song_id" => 'LAST_INSERT_ID()',
-                             ":user_id" => $user_id);
-            $tables['tags'] = array('song_id', 'user_id', 'tags');
+                             ":user_id" => $user_id,
+                             ":postdate" => $date);
             $data['tags'] = $tagData;
         }
         
-        if(!empty($songObj->embeds)){
-            $tables ['embeds']= array('song_id', 'user_id', 'embeds');
+        if (!empty($songObj->embeds)){
+            $tables['embeds']= array('song_id', 'user_id', 'embeds', 'postdate');
             $embedData = array(':song_id' => 'LAST_INSERT_ID()',
                                ':user_id' => $user_id,
-                               ':embeds' => $songObj->embeds);
+                               ':embeds' => $songObj->embeds,
+                               ":postdate" => $date);
             $data['embeds'] = $embedData;
         }
         
-        if(!empty($songObj->files)){
-            $tables ['media']= array('song_id', 'user_id', 'media_name', 'filetype');
+        if (!empty($songObj->files)){
+            $tables['media']= array('song_id', 'user_id', 'media_name', 'filetype');
             foreach($songObj->files['name'] as $index => $name){
                 $fileData = explode(".", $name);
                 $filetype = end($fileData);
@@ -238,20 +266,12 @@ class SongManager {
         return $this;
     }
 
-    public function deleteSong(Song $songObj){
+    public function deleteSong($song_id, $user_id){
         $this->_errors = array();
-        $user_id = $this->getUserID();
-        if($user_id != 0){
-            $PDO = $this->getConnection();
-            $PDO->beginTransaction();
-            $song_id = $songObj->songid;
-            $sql .= "DELETE FROM songs_meta WHERE (song_id = $song_id);";
-            $sql .= "DELETE FROM tags WHERE (song_id = $song_id);";
-            $sql .= "DELETE FROM media WHERE (song_id = $song_id);";
-            $sql .= "DELETE FROM embeds WHERE (song_id = $song_id);";
-            $STH = $PDO->prepare($sql);
-            $STH->execute();
-            $PDO->commit();
+        if ($user_id > 0){
+            $STH = $this->getHandler();
+            $STH->delete('songs_meta', array(':song_id' => $song_id), array('song_id', '=', ':song_id'));
+            $STH->getErrors();
             return $this;
         } else {
             $this->_errors[] = 'Cannot delete song from anonymous account.';
@@ -263,33 +283,61 @@ class SongManager {
         $this->_errors = array();
         $STH = $this->getHandler();
         $this->generateView($view, $sortby, FALSE);
+        if ($view == 'media'){
+            $table = 'media';
+        } else {
+            $table = 'songs_meta';
+        }
         $fields = $this->getFields();
         $where = $this->getWhere();
         $orderby = $this->getOrderBy();
         $join = $this->getJoin();
         $values = array(':song_id' => $song_id);
-        $STH->get('songs_meta', $fields, $values, $where, $orderby, $join);
+        $STH->get($table, $fields, $values, $where, $orderby, $join);
         $results = $STH->getResults();
-        return $results[0];
+        if (count($results) == 1){
+            return $results[0];
+        } else {
+            return $results;
+        }
     }
     
     ##Limits array: Start (min), Num_res (max), Page (default 1)
-    public function viewSongs(array $limits, $view = 'text', $sortby = '', $userid = ''){
+    public function viewSongs($limits, $view = 'text', $sortby = '', $user_id = ''){
         //Get all of the data from the DB
         $this->_errors = array();
         $STH = $this->getHandler();
         $this->generateView($view, $sortby);
         $table = 'songs_meta';
         $fields = $this->getFields();
-        $where = array();
         $orderby = $this->getOrderby();
         $join = $this->getJoin();
         //Ask DB for all row that are between the start, num rows, and begin after the page limit
-        if(array_key_exists('num_res', $limits)){
-            if(array_key_exists('page', $limits)){
+        if (!is_array($limits) && $limits = 'all'){
+            $fields = '*';
+            if (isset($user_id)){
+                $user_id = intval($user_id);
+                $values = array(':user_id' => $user_id);
+                $where = array('user_id', '=', ':user_id');
+            } else {
+                $values = array();
+                $where = array();
+            }
+            $resArray = $STH->get($table, $fields, $values, $where, $orderby, $join)->getResults();
+            return $resArray;
+        } elseif (array_key_exists('num_res', $limits)){
+            if (array_key_exists('page', $limits)){
+                if (isset($user_id)){
+                    $user_id = intval($user_id);
+                    $values = array(':user_id' => $user_id);
+                    $where = array('user_id', '=', ':user_id');
+                } else {
+                    $values = array();
+                    $where = array();
+                }
                 $pair = array('start' => ($limits['num_res'] * ($limits['page'] -1)), 'end' => ($limits['num_res'] * $limits['page']));
                 $extra = " LIMIT ". $pair['start']. ", ". $limits['num_res'];
-                $resArray = $STH->get($table, $fields, array(), $where, $orderby, $join, $extra)->getResults();
+                $resArray = $STH->get($table, $fields, $values, $where, $orderby, $join, $extra)->getResults();
                 return $resArray; // Array filled with objects hydrated with the properties that match the query
             } else {
                 $this->_errors[] = 'There was no page specified in viewSongs call, fatal';
@@ -299,27 +347,56 @@ class SongManager {
             $this->_errors[] = 'There was no num_res specified in viewSongs call, fatal';
             return $this;
         }
-        
-        //Sort the results (by recent, oldest, user etc)
-        
-        //Return the array of song objects that match the provided limits
     }
     
-    public function updateSong(Song $songObj){
+    //Files has structure of: files=>array( name=>array([0] first name, [1] second name), filetype=>array([0 first filetype, [1] second filetype))
+    //tl;dr the same strucure as a $_FILES array
+    public function updateSong(Song $songObj, $song_id, $user_id){
         $this->_errors = array();
-        if($user_id != 0){
-            $PDO = $this->getConnection();
-            $PDO->beginTransaction();
-            $sth = $PDO->prepare("UPDATE `songs_meta` SET `song_name` = :songname, `song_desc` = :songdesc, `user_id` = :userid, `lyrics` = :lyrics
-                                 WHERE `song_id` = :songid;
-                                 INSERT INTO `tags` (`song_id`, `tags`) VALUES (`:songid`, `:tags`)
-                                    ON DUPLICATE UPDATE `song_id` = VALUES(`song_id`), `tags` = VALUES(`tags`);
-                                 INSERT INTO `embeds` (`song_id`, `embeds`) VALUES (`:songid`, `:embeds`)
-                                    ON DUPLICATE UPDATE `song_id` = VALUES(`song_id`), `embeds` = VALUES(`embeds`);
-                                 INSERT INTO `media` (`song_id`, `media_name`, `filetype`) VALUES (`:songid`, `:medianame`, `:filetype`)
-                                    ON DUPLICATE UPDATE `song_id` = VALUES(`song_id`), `media_name` = VALUES(`media_name`), `filetype` = VALUES(`filetype`);");
-            $sth->execute((array)$songObj);
-            $PDO->commit();
+        if ($user_id != 0){
+            $STH = $this->getHandler();
+            $date = date("Y-m-d H:i:s");
+            
+            $songData = array(":song_id" => $song_id,
+                              ":user_id" => $user_id,
+                              ":song_name" => $songObj->song_name,
+                              ":song_desc" => $songObj->song_desc,
+                              ":lyrics" => $songObj->lyrics);
+            $tables = array('songs_meta' => array('song_id', 'user_id', 'song_name', 'song_desc', 'lyrics'));
+            $data['songs_meta'] = $songData;
+            
+            if (!empty($songObj->tags)){
+                $tables['tags'] = array('song_id', 'user_id', 'tags', 'postdate');
+                $tagData = array(":tags" => $songObj->tags,
+                                 ":song_id" => $song_id,
+                                 ":user_id" => $user_id,
+                                 ":postdate" => $date);
+                $data['tags'] = $tagData;
+            }
+            
+            if (!empty($songObj->embeds)){
+                $tables['embeds']= array('song_id', 'user_id', 'embeds', 'postdate');
+                $embedData = array(':song_id' => $song_id,
+                                   ':user_id' => $user_id,
+                                   ':embeds' => $songObj->embeds,
+                                   ":postdate" => $date);
+                $data['embeds'] = $embedData;
+            }
+            
+            if (!empty($songObj->files)){
+                $tables['media']= array('song_id', 'user_id', 'media_name', 'filetype');
+                foreach($songObj->files['name'] as $index => $name){
+                    $fileData = explode(".", $name);
+                    $filetype = end($fileData);
+                    $filename = $fileData[0];
+                    $mediaData = array(':song_id' => $song_id,
+                                       ':user_id' => $user_id,
+                                       ':media_name' => $filename,
+                                       ':filetype' => $filetype);
+                    $data['media'][] = $mediaData;
+                }
+            }
+            $q = $STH->insert($tables, $data, NULL, NULL, TRUE);
             return $this;
         } else {
             $this->_errors[] = 'Cannot update song from anonymous account.';
@@ -329,33 +406,220 @@ class SongManager {
     
     ##Creates a new grouping of Songs
     ##1 - Album, 2 - compilation
-    public function newGroup($song_id, $type, $name){
+    public function newGroup(array $song_id, $type, $name, $desc){
         $this->_errors = array();
-        $PDO = $this->getConnection();
-        $PDO->beginTransaction();
-        $sth = $PDO->prepare('INSERT INTO groups_lookup (\'group_name\', \':type\') VALUES (\':group_name\', \':type\');');
-        $dsth = $PDO->prepare('INSERT INTO groups (\'group_id\', \'song_id\') VALUES (LAST_INSERT_ID(), \':song_id\');');//group_id is autoincrement
+        $STH = $this->getHandler();
+        $user_id = $this->getUserID();
+        $pTable = 'groups';
+        $pKey = 'group_id';
+        $tables = array('groups' => array('group_name', 'group_desc', 'type', 'user_id'),
+                        'groups_lookup' => array('group_id', 'song_id', 'user_id')); //List of tables to insert (make sure lookup table is first)
+        $groupData = array(':group_name' => $name, ':group_desc' => $desc, ':type' => $type, ':user_id' => $user_id); //IDs and group ids and stuff
+        $data['groups'] = $groupData;
         
-        $data = array(
-            'song_id' => $song_id,
-            'type' => $type,
-            'group_name' => $name
-        );
-        foreach ($data['song_id'] as $key => $song_id){
-            $dsth->execute($data['song_id'][$song_id]);
-            $sth->execute();
+        foreach ($song_id as $index => $id){
+            $data['groups_lookup'][] = array(':group_id' => 'LAST_INSERT_ID()', ':song_id' => $id, ':user_id' => $user_id);
         }
-        $PDO->commit();
+        
+        $STH->insert($tables, $data, $pTable, $pKey);
         return $this;
     }
-    public function destroyGroup(){
+    public function destroyGroup($group_id, $table = 'groups'){
         $this->_errors = array();
+        $STH = $this->getHandler();
+        $where = array('group_id', '=', $group_id);
+        $STH->delete($table, NULL, $where);
+        return $this;
     }
-    public function viewGroup(){
+    
+    ##Returns name, description, and list of song IDs that are in the specified song
+    public function viewGroup($group_id, $members = FALSE, $songIdOnly = TRUE, $typeDescription = FALSE){
         $this->_errors = array();
+        $STH = $this->getHandler();
+        $table = 'groups';
+        $fields = '*';
+        if ($typeDescription){
+            $fields = array('group_id', 'group_name', 'group_desc', 'user_id');
+            $type = $STH->get('groups_type', '*')->getResults();
+            $join = array(array('join_table' => 'group_type',
+                                'primary_key' => 'groups.type',
+                                'join_key' => 'group_type.type_id',
+                                'fields' => array('type_name', 'type_desc')));
+        } else {
+            $join = array();
+        }
+        if (is_array($group_id)){
+            foreach ($group_id as $key => $id){
+                $values = array(':group_id' => $id);
+                $where = array('group_id', '=', ':group_id');
+                $res[$key] = $STH->get($table, $fields, $values, $where, array(), $join)->getResults();
+                //Get info from groups_lookup
+                if (count($res[$key]) == 1){
+                    $res[$key] = $res[$key][0];
+                }
+                
+                if ($members){
+                    $table = 'groups_lookup';
+                    if ($songIdOnly = TRUE){
+                        $fields = array('song_id');
+                    }
+                    $res[$key]['members'] = $STH->get($table, $fields, $values, $where)->getResults();
+                }
+            }
+        } else {
+            $values = array(':group_id' => $group_id);
+            $where = array('group_id', '=', ':group_id');
+            $res = $STH->get($table, $fields, $values, $where, array(), $join)->getResults();
+            //Get info from groups_lookup
+            if (count($res) == 1){
+                $res = $res[0];
+            }
+            
+            if ($members){
+                $table = 'groups_lookup';
+                if ($songIdOnly = TRUE){
+                    $fields = array('song_id');
+                }
+                $res['members'] = $STH->get($table, $fields, $values, $where)->getResults();
+            }
+        }
+        
+        return $res;
     }
-    public function updateGroup(){
+    
+    public function viewGroups($limits, $members = FALSE, $songIdOnly = TRUE, $typeDescription = TRUE, $user_id = NULL){ //View? Adding some kind of filtration, like in the updatesongs call, but that seems too trivial for now
         $this->_errors = array();
+        $STH = $this->getHandler();
+        $table = 'groups';
+        $fields = '*';
+        $where = array();
+        $orderby = array();
+        if (!is_array($limits) && $limits = 'all'){
+            if ($typeDescription){
+                $fields = array('group_id', 'group_name', 'group_desc', 'user_id');
+                $type = $STH->get('group_type', '*')->getResults();
+                $join = array(array('join_table' => 'group_type',
+                                    'primary_key' => 'groups.type',
+                                    'join_key' => 'group_type.type_id',
+                                    'fields' => array('type_name', 'type_desc')));
+            } else {
+                $join = array();
+            }
+            if (isset($user_id)){
+                $user_id = intval($user_id);
+                $values = array(':user_id' => $user_id);
+                $where = array('user_id', '=', ':user_id');
+            } else {
+                $values = array();
+                $where = array();
+            }
+            $resArray = $STH->get($table, $fields, $values, $where, array(), $join)->getResults();
+            return $resArray; // Array filled with objects hydrated with the properties that match the query
+        }
+        if (array_key_exists('num_res', $limits)){
+            if (array_key_exists('page', $limits)){
+                $pair = array('start' => ($limits['num_res'] * ($limits['page'] -1)), 'end' => ($limits['num_res'] * $limits['page']));
+                $extra = ' LIMIT '. $pair['start']. ', '. $limits['num_res'];
+                if ($typeDescription){
+                    $fields = array('group_id', 'group_name', 'group_desc', 'user_id');
+                    $type = $STH->get('group_type', '*')->getResults();
+                    $join = array(array('join_table' => 'group_type',
+                                        'primary_key' => 'groups.type',
+                                        'join_key' => 'group_type.type_id',
+                                        'fields' => array('type_name', 'type_desc')));
+                } else {
+                    $join = array();
+                }
+                if (isset($user_id)){
+                    $user_id = intval($user_id);
+                    $values = array(':user_id' => $user_id);
+                    $where = array('user_id', '=', ':user_id');
+                } else {
+                    $values = array();
+                    $where = array();
+                }
+                $resArray = $STH->get($table, $fields, array(), $where, $orderby, $join, $extra)->getResults();
+                return $resArray; // Array filled with objects hydrated with the properties that match the query
+            } else {
+                $this->_errors[] = 'There was no page specified in viewGroups call, fatal';
+                return $this;
+            }
+        } else {
+            $this->_errors[] = 'There was no number of requested results specified in viewGroups call, fatal';
+            return $this;
+        }
+    }
+    
+    ##Updates groups and groups_lookup with data, requires two arrays with group information in them
+    ##'song_id' => array(), 'name' => string, 'desc' => string etc etc
+    public function updateGroup($group_id, $user_id, array $old_group, array $new_group){
+        $this->_errors = array();
+        $STH = $this->getHandler();
+<<<<<<< HEAD
+        $user_id = $this->getUserID();
+        
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> origin/business-branch
+        if ($old_group['members'] != NULL){
+            $to_delete = array_diff($old_group['members'], $new_group['members']);
+            $to_insert = array_diff($new_group['members'], $old_group['members']);
+        } elseif ($old_group['members'] == NULL){
+            $to_insert = $new_group['members'];
+            $to_delete = NULL;
+        } 
+=======
+>>>>>>> parent of 2fea6c0... Alpha .1
+        
+        $to_delete = array_diff($old_group['song_id'], $new_group['song_id']);
+        $to_insert = array_diff($new_group['song_id'], $old_group['song_id']);
+        $this->destroyGroup($group_id);
+        
+<<<<<<< HEAD
+        foreach ((array)$to_delete as $index => $to_delete_id){
+<<<<<<< HEAD
+=======
+=======
+        $to_delete = array_diff($old_group['members'], $new_group['members']);
+        $to_insert = array_diff($new_group['members'], $old_group['members']);
+        
+        foreach ($to_delete as $index => $to_delete_id){
+>>>>>>> origin/business-branch
+>>>>>>> origin/business-branch
+            $values = array('song_id', '=', ':song_id');
+            $where = array(':song_id' => $to_delete_id);
+            $STH->delete('groups_lookup', $values, $where);
+        }
+        
+        $name = $new_group['name'];
+        $desc = $new_group['desc'];
+        $type = $new_group['type'];
+        
+        $tables = array('groups' => array('group_id', 'group_name', 'group_desc', 'type', 'user_id'),
+=======
+        $tables = array('groups' => array('group_name', 'group_desc', 'type', 'user_id'),
+>>>>>>> parent of 2fea6c0... Alpha .1
+                        'groups_lookup' => array('group_id', 'song_id', 'user_id')); //List of tables to insert (make sure lookup table is first)
+        $groupData = array(':group_name' => $name, ':group_desc' => $desc, ':type' => $type, ':user_id' => $user_id); //IDs and group ids and stuff
+        $data['groups'] = $groupData;
+        
+        foreach ($song_id as $index => $id){
+            $data['groups_lookup'][] = array(':group_id' => 'LAST_INSERT_ID()', ':song_id' => $id, ':user_id' => $user_id);
+        }
+        $STH->getErrors();
+    }
+    
+    public function songIdentity($song_id){
+        $this->_errors = array();
+        $STH = $this->getHandler();
+        $table = 'groups_lookup';
+        $fields = '*';
+        $values = array(':song_id' => $song_id);
+        $where = array('song_id', '=', ':song_id');
+        $res = $STH->get($table, $fields, $values, $where)->getResults();
+        $res['count'] = $STH->lastCount();
+        return $res;
     }
 }
 ?>
