@@ -1,24 +1,82 @@
-#field {
-    display: inline-block;
-    padding: 5px 10% 0 10%;
-    width: 80%;
-    clear: both;
+li h4 {
+   display: inline-block;
+   padding: 10px;
+}
+
+textarea {
+   height: 150px;
+   max-height: 450px;
+   max-width: 850px;
+   font-size: 1em;
+}
+
+label {
+   display: inline-block;
+   float: left;
+   max-width: 100px;
+   clear: both;
+}
+
+fieldset > input, textarea, select, #uplcont button {
+  width: 75%;
+  max-width: 800px;
+   -webkit-box-sizing: border-box; /* For legacy WebKit based browsers */
+   -moz-box-sizing: border-box; /* For all Gecko based browsers */
+   -ms-box-sizing: border-box;
+   -o-box-sizing: border-box;
+   box-sizing: border-box;
+   margin: 0;
+   float: right;
+}
+
+input[type="file"] {
+   margin: 30px;
+}
+
+.form-cont {
+   position: relative;
+   display: block;
+   max-width: 85%;
+   margin: auto;
+}
+
+.form-cont input {
+   padding: 4px;
+   display: inline;
+}
+
+#submit input{
+   position: relative;
+   width: 100%;
+   padding: 1em;
+}
+
+fieldset input, fieldset textarea {
+    /*max-width: 60%;*/
     font-size: 1.5em;
 }
 
-#field input {
+label {
+    display: block;
+}
+
+#flex-cont {
+    display: inline-block;
+    max-width: 500px;
+    margin: 0;
     float: left;
 }
 
-#scrollable {
-    overflow: scroll;
-    -webkit-column-count: 3; /* Chrome, Safari, Opera */
-    -moz-column-count: 3; /* Firefox */
-    column-count: 3;
-    -webkit-column-gap: 40px; /* Chrome, Safari, Opera */
-    -moz-column-gap: 40px; /* Firefox */
-    column-gap: 40px;
-    -webkit-column-rule: 4px outset #ff00ff; /* Chrome, Safari, Opera */
-    -moz-column-rule: 4px outset #ff00ff; /* Firefox */
-    column-rule: 4px outset #ff00ff;
+#flex-cont input {
+    width: auto;
+    clear: both;
+}
+
+#flex-cont p {
+    display: inline-block;
+    margin: .4em auto;
+}
+
+#flex-cont li {
+    display: block;
 }

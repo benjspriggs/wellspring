@@ -21,14 +21,15 @@ $token = Token::csrf();
 <div id="editcont">
     <h3>Edit song <?=$name?></h3>
     <form id="editform" enctype="multipart/form-data" action="loading.php" method="POST">
-        <ul>
-            <input name="name" id="name" value="<?=$name?>" placeholder="Song name"><br>
-            <textarea name="lyrics" id="lyrics" maxlength="200" placeholder="Lyrics"><?=$lyrics?></textarea><br>
-            <textarea name="desc" id="desc" placeholder="Song description"><?=$desc?></textarea><br>
-            <input name="tags" id="tags" value="<?=$tags?>" placeholder="Tags"><br>
-            <input name="embeds" id="embeds" value="<?=$embeds?>" placeholder="Embeds and links"><br>
-            <input type="file" name="sfile[]" id="sfile[]" multiple>
-        </ul>
+        <fieldset>
+            <label for="name">Song Name</label><input name="name" id="name" value="<?=$name?>" placeholder="Song name"></li>
+            <label for="lyrics">Lyrics</label><textarea name="lyrics" id="lyrics" maxlength="200" placeholder="Lyrics"><?=$lyrics?></textarea>
+            <label for="desc">Song Description</label><textarea name="desc" id="desc" placeholder="Song description"><?=$desc?></textarea>
+            <label for="tags">Tags</label><input name="tags" id="tags" value="<?=$tags?>" placeholder="Tags">
+            <label for="embeds">Links and embedded videos</label><input name="embeds" id="embeds" value="<?=$embeds?>" placeholder="Embeds and links">
+        </fieldset><fieldset>
+            <label for="sfile">File upload</label><input type="file" name="sfile[]" id="sfile[]" multiple>
+        </fieldset>
         <?php
             if  ($r['media']){
                 echo "<p id=\"media-table\">";

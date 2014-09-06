@@ -1,7 +1,16 @@
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 body {
    text-align: justify;
    font-family: Arial, sans-serif;
-   background: rgb(136, 119, 51);
+   background: #204047;
+   color: #382907;
 }
 
 h2 {
@@ -28,12 +37,7 @@ ul {
    list-style: none;
    font-size: 1.25em;
    display: inline-block;
-}
-
-li {
-   display: inline;
-   text-align: left;
-   padding: 10px;
+   padding-right: 4em;
 }
 
 article {
@@ -51,11 +55,20 @@ img {
    max-height: 100%;
 }
 
+video {
+   max-width: 100%;
+   max-height: 100%;
+}
+
+fieldset {
+   background: white;
+}
+
 .page {
-   max-width: 80%;
+   max-width: 90%;
    margin: -50px auto;
    padding: 60px 20px 20px 20px;
-   background: white; /*Remember to edit this, Alan!*/
+   background: #f0f3f4; /*Remember to edit this, Alan!*/
 }
 
 .empty {
@@ -75,8 +88,8 @@ img {
 
 
 #content {
-   max-width: 850px;
-   width: 70%;
+   width: 75%;
+   max-width: 100%;
    float: left;
 }
 
@@ -89,17 +102,9 @@ img {
    margin: 0 auto;
 }
 
-@media screen and (max-width: 900px) {
-   #sidebar {
-      display: none;
-   }
-   
-   #content {
-      margin: 0 auto;
-      clear: both;
-      width: 900px;
-      max-width: 95%;
-   }
+[placeholder]:focus::-webkit-input-placeholder {
+  transition: opacity 0.5s 0.5s ease; 
+  opacity: 0;
 }
 /*Forest pallete:
 
@@ -109,10 +114,5 @@ rgb(90, 176, 30);
 rgb(204, 80, 34);
 rgb(176, 76, 39);
 
-Old pallete:
-
-rgb();
-rgb():
-rgb():
-rgb():
+http://paletton.com/#uid=33n0u0ki1etbgnRemi+mtbNrz7Y
 */

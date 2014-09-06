@@ -2,7 +2,17 @@
 require 'lib/init.php';
 
 if (Token::check(Input::get('token'))){
-    $a = array('logIn', 'verifyEmail', 'registerUser', 'addSong', 'updateSong', 'deleteSong', 'addGroup', 'deleteGroup', 'updateGroup');
+    $a = array('logIn',
+               'verifyEmail',
+               'registerUser',
+               'updateUser',
+               'deleteUser',
+               'addSong',
+               'updateSong',
+               'deleteSong',
+               'addGroup',
+               'updateGroup',
+               'deleteGroup');
     if (in_array(Input::get('action'), $a)){
         require_once 'lib/actions/'. Input::get('action') .'.php';
     }
@@ -11,6 +21,10 @@ if (Token::check(Input::get('token'))){
 } else {
     echo 'CSRF test failed.<br>';
 }
+##Uncomment to automatically redirect after error/ success page
+//if (!empty($_SERVER['HTTP_REFERER'])) {
+//    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
+//}
 
 switch (Input::get('action')){
     case("addSong"):

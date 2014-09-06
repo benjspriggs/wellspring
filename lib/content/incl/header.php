@@ -20,7 +20,7 @@ if ($loggedin || $login_remember){
         <li><a href="write.php" title="Submit a new song to the Wellspring database, recorded by yourself, or someone else - with appropriate permissions, of course!">write</a></li>
         <li><a href="listen.php" title="Browse through all of the songs in the Wellspring database!">listen</a></li>
         <li>
-            <a href="group/view.php">groups</a>
+            <a href="javascript:;">groups</a>
             <ul class="child-header">
                 <a href="group/view.php" title="See all of the albums, compilations, and many other groupings of songs that have been submitted to Wellspring!"><li>view</li></a>
                 <a href="group/create.php" title="Submit a new grouping of songs - album, compilation, songs by a certain artist or recording group, songs from a certain region, whatever!"><li>create</li></a>
