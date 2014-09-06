@@ -9,10 +9,9 @@ ob_flush();
 <html lang="en-us">
     <head>
         <title><?php echo $t->getName();?></title>
-        <meta name="viewport" content="width=device-width" charset="utf-8">
+        <meta charset="utf-8">
         <base href="<?=Config::get('root_link/site')?>" />
-        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/normalize.css">
-        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/header.css">
+        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/normalize.css">    
         <?php
         foreach ($t->getCss() as $file => $name){
             echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"". Config::get('root_link/content') ."css/". $name .".css\">\n";
@@ -20,6 +19,7 @@ ob_flush();
         
         ?>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/mobile.css">
 =======
 <<<<<<< HEAD
@@ -27,6 +27,10 @@ ob_flush();
 =======
 >>>>>>> origin/business-branch
 >>>>>>> origin/business-branch
+=======
+        <link rel="stylesheet" type="text/css" href="<?=Config::get('root_link/content')?>css/header.css">
+        <!-- You're going to need a way for the search bar to be checked if it has any data in it -->
+>>>>>>> parent of 2fea6c0... Alpha .1
         <!-- Don't forget the meta tags, and Google Font API links! -->
         <!-- Favicon info, make sure to name the .ico file favicon.ico for IE6 peeps -->
         <?php
@@ -44,7 +48,7 @@ ob_flush();
     
     <body>
         <div class="page">
-            <?php include(Config::get('root/content').'incl/header.php');?>
+            <?php include_once(Config::get('root/content').'incl/header.php');?>
             <div id="content">
                 <?php $path = $t->getContent(); include_once(Config::get('root/content'). "$path");?>
             </div>

@@ -37,7 +37,7 @@ if ($validate->passed()){
     $user->registerUser($username, $password, $email, $remember);
     $user->getErrors();
 } else {
-    echo 'Validation failed for the following reasons: <br>';
+    echo 'Validation failed for the following reasongs: <br>';
     $validate->errors();
 }
 ?>

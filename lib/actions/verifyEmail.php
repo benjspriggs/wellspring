@@ -11,7 +11,7 @@ if (isset($q[0]['email'])){
     //Does it match?
     if ($mastertoken === $checktoken){
         //If so, verify user (change the verified 1/0 value, redirect)
-        $STH->update('users', array('is_verified'), array('is_verified' => 1), array('email', '=', $email));
+        $STH->update('users', array('is_verified'), array('is_verified' => 1), array('email', '=', "'test@gmail.com'"));
         if ($STH->lastCount() > 0){
             echo "Thank you, $email has been verified!<br>";
         } else {

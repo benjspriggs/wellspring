@@ -6,17 +6,12 @@ $SM = new SongManager($STH);
 
 $results = $SM->viewGroups('all', TRUE, TRUE, TRUE, $user_id);
 
-echo "<div class=\"flex-box\">";
-foreach ($results as $index => $group){
+foreach ($results as $entry => $group){
+    echo "<div class=\"flex-box\">";
     echo "<article class=\"group\">";
     echo "<h4><a href=\"group/view.php?group_id=". $group['group_id'] ."\">". $group['group_name'] ."</h4></a>";
     echo "<p>Description: ". $group['group_desc'] ."</p>";
     echo "<span>Type: ". $group['type_name'] ."</span>";
-    echo "</article>";
-    if (((($index + 1) % 3) == 0) && $index != 1){
-        echo "</div><div class=\"flex-box\">";
-    }
-    echo "\n";
+    echo "</article></div>\n";
 }
-echo "</div>\n";
 ?>

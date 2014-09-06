@@ -5,7 +5,7 @@ if (is_array($media[0])){
         $path = "uploads/". $song['song_name'] ."/". $asset['media_name'] .".". $asset['filetype'];
         switch (findMediaType($asset['filetype'])){
             case ('img'):
-                echo "<a href=\"". $path ."\">". $asset['media_name'] ."<br>\n";
+                echo "<a href=\"". $path ."\">". $asset['media_name'] ."</a><br>\n";
                 echo "<img src=\"". $path ."\">";
                 echo "</a>";
                 break;
@@ -28,7 +28,7 @@ if (is_array($media[0])){
     $path = "uploads/". $song['song_name'] ."/". $media['media_name'] .".". $media['filetype'];
     switch (findMediaType($media['filetype'])){
         case ('img'):
-            echo "<a href=\"". $path ."\">". $media['media_name'] ."<br>\n";
+            echo "<a href=\"". $path ."\">". $media['media_name'] ."</a><br>\n";
             echo "<img src=\"". $path ."\">";
             echo "</a>";
             break;
@@ -38,7 +38,9 @@ if (is_array($media[0])){
             echo "</audio>";
             break;
         case ('vid'):
-            echo "<video width=\"320\" height=\"240\" controls><source src=\"". $path ."\"></video>"; //Insert any uploaded videos, or embeds here (Make sure to account for browsers that can't serve up HTML5 video)
+            echo "<video><source src=\"";
+            //Insert any uploaded videos, or embeds here (Make sure to account for browsers that can't serve up HTML5 video)
+            echo "\"></video>"; 
             break;
         default:
             break;

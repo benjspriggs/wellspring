@@ -2,17 +2,7 @@
 require 'lib/init.php';
 
 if (Token::check(Input::get('token'))){
-    $a = array('logIn',
-               'verifyEmail',
-               'registerUser',
-               'updateUser',
-               'deleteUser',
-               'addSong',
-               'updateSong',
-               'deleteSong',
-               'addGroup',
-               'updateGroup',
-               'deleteGroup');
+    $a = array('logIn', 'verifyEmail', 'registerUser', 'addSong', 'updateSong', 'deleteSong', 'addGroup', 'deleteGroup', 'updateGroup');
     if (in_array(Input::get('action'), $a)){
         require_once 'lib/actions/'. Input::get('action') .'.php';
     }
@@ -21,6 +11,7 @@ if (Token::check(Input::get('token'))){
 } else {
     echo 'CSRF test failed.<br>';
 }
+<<<<<<< HEAD
 ##Uncomment to automatically redirect after error/ success page
 //if (!empty($_SERVER['HTTP_REFERER'])) {
 //    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
@@ -32,6 +23,8 @@ if (!empty($_SERVER['HTTP_REFERER'])) {
     header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
 }
 >>>>>>> origin/business-branch
+=======
+>>>>>>> parent of 2fea6c0... Alpha .1
 
 switch (Input::get('action')){
     case("addSong"):

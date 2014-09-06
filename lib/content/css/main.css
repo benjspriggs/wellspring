@@ -1,16 +1,7 @@
-html {
-  box-sizing: border-box;
-}
-
-*, *:before, *:after {
-  box-sizing: inherit;
-}
-
 body {
    text-align: justify;
    font-family: Arial, sans-serif;
-   background: #204047;
-   color: #382907;
+   background: rgb(136, 119, 51);
 }
 
 h2 {
@@ -37,7 +28,12 @@ ul {
    list-style: none;
    font-size: 1.25em;
    display: inline-block;
-   padding-right: 4em;
+}
+
+li {
+   display: inline;
+   text-align: left;
+   padding: 10px;
 }
 
 article {
@@ -55,6 +51,7 @@ img {
    max-height: 100%;
 }
 
+<<<<<<< HEAD
 video {
    max-width: 100%;
    max-height: 100%;
@@ -73,11 +70,13 @@ fieldset {
 =======
 >>>>>>> origin/business-branch
 >>>>>>> origin/business-branch
+=======
+>>>>>>> parent of 2fea6c0... Alpha .1
 .page {
-   max-width: 90%;
+   max-width: 80%;
    margin: -50px auto;
    padding: 60px 20px 20px 20px;
-   background: #f0f3f4; /*Remember to edit this, Alan!*/
+   background: white; /*Remember to edit this, Alan!*/
 }
 
 .empty {
@@ -97,8 +96,8 @@ fieldset {
 
 
 #content {
-   width: 75%;
-   max-width: 100%;
+   max-width: 850px;
+   width: 70%;
    float: left;
 }
 
@@ -111,9 +110,17 @@ fieldset {
    margin: 0 auto;
 }
 
-[placeholder]:focus::-webkit-input-placeholder {
-  transition: opacity 0.5s 0.5s ease; 
-  opacity: 0;
+@media screen and (max-width: 900px) {
+   #sidebar {
+      display: none;
+   }
+   
+   #content {
+      margin: 0 auto;
+      clear: both;
+      width: 900px;
+      max-width: 95%;
+   }
 }
 /*Forest pallete:
 
@@ -123,5 +130,10 @@ rgb(90, 176, 30);
 rgb(204, 80, 34);
 rgb(176, 76, 39);
 
-http://paletton.com/#uid=33n0u0ki1etbgnRemi+mtbNrz7Y
+Old pallete:
+
+rgb();
+rgb():
+rgb():
+rgb():
 */

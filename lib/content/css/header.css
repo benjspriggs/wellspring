@@ -1,31 +1,27 @@
 /*Rules for the big home link*/
 #header a, #header a:visited { 
-   color: #978353;
-   -webkit-transition: .4s all;
-   -moz-transition: .4s all;
-   -ms-transition: .4s all;
-   -o-transition: .4s all;
-   transition: .4s all;
+   color: rgb(182, 186, 255);
 }
 
 #header a:hover, #header a:focus {
-   color: #BE837B;   /*Make sure to change this sucker at some point, Alan*/
-   -webkit-transition: .4s all;
-   -moz-transition: .4s all;
-   -ms-transition: .4s all;
-   -o-transition: .4s all;
-   transition: .4s all;
+   color: red;   /*Make sure to change this sucker at some point, Alan*/
+   -webkit-transition: .5s all;
+   -moz-transition: .5s all;
+   -ms-transition: .5s all;
+   -o-transition: .5s all;
+   transition: .5s all;
 }
 
 #nav {
    float: left;
    width: 60%;
-   margin: .3em;
+   padding-top: .3em;
 }
 
 #nav li {
    display: inline-block;
    vertical-align: text-top;
+<<<<<<< HEAD
 <<<<<<< HEAD
    padding: .3em;
 =======
@@ -35,6 +31,8 @@
    padding: .4em;
 >>>>>>> origin/business-branch
 >>>>>>> origin/business-branch
+=======
+>>>>>>> parent of 2fea6c0... Alpha .1
 }
 
 #nav li a, #nav li a:visited {
@@ -65,17 +63,17 @@
    display: block;
    padding: 0;
    font-size: 1em;
-   height: auto;
-   max-width: 4em;
+   width: 4em;
    overflow: hidden;
    background: rgba(168, 212, 255, .4);
 }
 
 .child-header:hover {
-   max-height: 5em;
+   height: 4em;
 }
 
 .child-header {
+<<<<<<< HEAD
    max-height: .2em;
 <<<<<<< HEAD
 =======
@@ -89,11 +87,15 @@
 <<<<<<< HEAD
 =======
 =======
+=======
+   height: 0;
+>>>>>>> parent of 2fea6c0... Alpha .1
    -webkit-transition: .5s all;
    -moz-transition: .5s all;
    -ms-transition: .5s all;
    -o-transition: .5s all;
    transition: .5s all;
+<<<<<<< HEAD
 >>>>>>> origin/business-branch
 >>>>>>> origin/business-branch
 }
@@ -112,11 +114,20 @@ a:hover + .child-header {
 <<<<<<< HEAD
 =======
 =======
+=======
+}
+
+a:hover + .child-header {
+   height: 4em;
+>>>>>>> parent of 2fea6c0... Alpha .1
    -webkit-transition: .5s all;
    -moz-transition: .5s all;
    -ms-transition: .5s all;
    -o-transition: .5s all;
    transition: .5s all;
+<<<<<<< HEAD
 >>>>>>> origin/business-branch
 >>>>>>> origin/business-branch
+=======
+>>>>>>> parent of 2fea6c0... Alpha .1
 }

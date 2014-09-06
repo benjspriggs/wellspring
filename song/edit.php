@@ -1,11 +1,11 @@
-<?php //SONG
+<?php
 require_once('../lib/init.php');
 require_once('../lib/checks/accepted.php');
 
 $STH = new StatementHandler($PDO);
 $s = new SongManager($STH);
 $i = Input::get('song_id');
-$check = $s->exists($i, 'song');
+$check = $s->exists($i);
 if ($check){
     if ($accepted){
         $t = new Template('Edit Song', array('main', 'form', 'edit'), 'edit_song_form.php', 'Edit a song in the Wellspring database!', array('edit'));

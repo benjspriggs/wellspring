@@ -23,10 +23,8 @@ if ($count < $num_res){
 }
 echo "Showing page $page of $total. <br>";
 for($a = 1; $a <= $total; $a++){
-    if ($a == $page && $a != 1){
+    if ($a == $page){
         echo "$a  ";
-    } elseif ($a == 1){
-        //I don't want that silly '1' just hanging out there. Why is it there? What is it doing there? I don't know.
     } else {
         echo "<a href=\"listen.php?page=$a&num_res=$num_res\">$a</a>  ";
     }

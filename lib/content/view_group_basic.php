@@ -6,21 +6,15 @@ $STH = new StatementHandler($PDO);
 $SM = new SongManager($STH);
 ?>
 <h2><?=$name?></h2>
-<?php
-if ($loggedin && $accepted){
-    echo "<a href=\"group/edit.php?group_id=". $i ."\">Edit</a>";
-}
-?>
 <p><?=$desc?></p>
-
-<?php
-if ($members){
-    echo "<ul><legend><h4>Songs that are a part of this group:</h4></legend>";
+<ul><legend><h4>Songs that are a part of this group:</h4></legend>
+    <?php
     foreach ($members as $key => $song_id){
         $view = $SM->viewSong($song_id['song_id'], 'text');
         echo "<li><p><a href=\"song/view.php?song_id=". $view['song_id'] ."\">". $view['song_id']. "</a> - ";
         echo $view['song_name'] ."</p></li>";
     }
+<<<<<<< HEAD
     echo "</ul>";
 } else {
     $token = Token::csrf();
@@ -46,3 +40,7 @@ if ($members){
     </form>";
 }
 ?>
+=======
+    ?>
+</ul>
+>>>>>>> parent of 2fea6c0... Alpha .1
