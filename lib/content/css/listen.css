@@ -9,11 +9,12 @@ span {
 }
 
 #insert article {
+    background: white;
     position: relative;
     max-height: 1250px;
     border: 5px rgb(176, 76, 39) solid;
-    padding: 10px;
-    margin: 10px;
+    padding: 1.5em;
+    margin: 1em;
 }
 
 #insert img {
@@ -22,6 +23,7 @@ span {
     position: relative;
     float: right;
     padding-left: 10px;
+    margin: -1em;
 }
 
 #desc {
@@ -29,7 +31,7 @@ span {
 }
 
 #lyrics {
-    padding-left: 5px;
+    margin: 2em;
     display: inline;
 }
 
@@ -41,13 +43,13 @@ span {
 
 #title {
     display: inline-block;
-    margin: 13px;
+    margin: 0 0 .5em -2em;
 }
 
 .clicky {
-    width: 9px;
-    margin: -10px;
-    height: 80%;
+    width: 1em;
+    margin: -1.5em;
+    height: 100%;
     background: rgb(176, 76, 39);
     position: relative;
     float: left;
@@ -58,7 +60,7 @@ span {
 }
 
 .active {
-    height: 500px;
+    height: 50em;
     transition-timing-function: ease-out;
     -webkit-transition: 1.25s all;
     -moz-transition: 1.25s all;
@@ -69,7 +71,7 @@ span {
 }
 
 .hide {
-    height: 50px;
+    height: 5em;
     transition-timing-function: ease-out;
     -webkit-transition: .75s all;
     -moz-transition: .75s all;

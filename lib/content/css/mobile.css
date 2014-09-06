@@ -1,0 +1,31 @@
+@media screen and (max-width: 900px) {
+   body {
+      text-align: left;
+      word-wrap: break-word;
+   }
+   
+   #sidebar {
+      display: none;
+   }
+   
+   #content {
+      margin: 0 auto;
+      clear: both;
+      width: 100%;
+   }
+   
+   label {
+      display: none;
+   }
+   
+   #nav {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0;
+   }
+   
+   #insert, #insert article {
+      /*padding: 0;*/
+      margin: 0;
+   }
+}
