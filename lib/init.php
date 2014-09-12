@@ -1,16 +1,16 @@
 <?php
-
-//session_save_path('/hermes/bosnaweb04b/b1942/ipw.spricoco/phpsessions');
-
 $fp = dirname(__FILE__);
-require_once $fp . '/database.php';
-require_once $fp . '/functions.php';
-require_once $fp . '/config.php';
+require_once $fp . '/database';
+require_once $fp . '/functions';
+require_once $fp . '/config';
+
 
 spl_autoload_register(function($class){
-    if (is_file(dirname(__FILE__). '/classes/'. $class .'.php')){
-        include dirname(__FILE__). '/classes/'. $class .'.php';
+    if (is_file(dirname(__FILE__). '/classes/'. $class .'')){
+        include dirname(__FILE__). '/classes/'. $class .'';
     }}, true);
+
+session_save_path(Config::get('session/save_loc'));
 
 Session::create();
 

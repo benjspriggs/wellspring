@@ -8,7 +8,7 @@ $email = $r['email'];
 
 <div id="editcont">
     <h3>Edit account details for <?=$name?></h3>
-    <form id="editform" enctype="multipart/form-data" action="loading.php" method="POST">
+    <form id="editform" enctype="multipart/form-data" action="loading" method="POST">
         <ul>
             <input name="username" id="username" value="<?=$name?>" placeholder="Username"><br>
             <input name="npassword" id="password" type="password" placeholder="New password"><br>
@@ -24,7 +24,7 @@ $email = $r['email'];
         <input type="hidden" id="token" name="token" value="<?=$token?>">
         <input type="hidden" id="action" name="action" value="updateUser">
     </form>
-    <form id="deleteform" action="loading.php" method="POST">
+    <form id="deleteform" action="loading" method="POST">
         <div id="delete">
             <input type="submit" name="delte" value="Delete User">
             <input type="hidden" id="info" name="info" value="<?=htmlspecialchars(json_encode($r))?>">

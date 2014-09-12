@@ -1,5 +1,5 @@
 <?php
-require 'lib/init.php';
+require 'lib/init';
 
 if (Token::check(Input::get('token'))){
     $a = array('logIn',
@@ -14,10 +14,10 @@ if (Token::check(Input::get('token'))){
                'updateGroup',
                'deleteGroup');
     if (in_array(Input::get('action'), $a)){
-        require_once 'lib/actions/'. Input::get('action') .'.php';
+        require_once 'lib/actions/'. Input::get('action') .'';
     }
 } elseif (Token::check(Input::get('exittoken'))){
-    require_once 'lib/actions/logOut.php';
+    require_once 'lib/actions/logOut';
 } else {
     echo 'CSRF test failed.<br>';
 }
@@ -29,17 +29,17 @@ if (!empty($_SERVER['HTTP_REFERER'])) {
 
 switch (Input::get('action')){
     case("addSong"):
-        echo "<a href=\"write.php\">Return to upload page</a>";
+        echo "<a href=\"write\">Return to upload page</a>";
         break;
     case("logIn"):
     case("verifyEmail"):
-        echo "<a href=\"login.php\">Return to login page</a>";
+        echo "<a href=\"login\">Return to login page</a>";
         break;
     case("registerUser"):
-        echo "<a href=\"register.php\">Return to register page</a>";
+        echo "<a href=\"register\">Return to register page</a>";
         break;
     default:
-        echo "<a href=\"home.php\">Return to home</a>";
+        echo "<a href=\"home\">Return to home</a>";
         break;
 }
 ?>

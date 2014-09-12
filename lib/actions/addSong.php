@@ -37,6 +37,6 @@ if ($validate->passed()){
     echo "Validation failed for the following reasons:<br>";
     $validate->errors();
 }
-//header('Location: home.php');
+//header('Location: home');
 
 ?>

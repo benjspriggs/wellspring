@@ -28,7 +28,7 @@ for($a = 1; $a <= $total; $a++){
     } elseif ($a == 1){
         //I don't want that silly '1' just hanging out there. Why is it there? What is it doing there? I don't know.
     } else {
-        echo "<a href=\"listen.php?page=$a&num_res=$num_res\">$a</a>  ";
+        echo "<a href=\"listen?page=$a&num_res=$num_res\">$a</a>  ";
     }
 }
 
@@ -42,7 +42,7 @@ foreach($results as $entry => $song){
         echo "<div class=\"clicky\" id=\"clicky$i\"></div>";
         
         echo "<h4 id=\"title\">";
-            echo "<a href=\"song/view.php?song_id=". $song['song_id'] ."\">". $song['song_name']. "</a>";
+            echo "<a href=\"song/view?song_id=". $song['song_id'] ."\">". $song['song_name']. "</a>";
         echo "</h4>\n";
         if ($SM->hasMedia(intval($song['song_id']))){
             $media = $SM->viewSong($song['song_id'], 'media');
@@ -92,7 +92,7 @@ foreach($results as $entry => $song){
             
             if ($media){
                 ob_start();
-                include('media_basic_links.php');
+                include('media_basic_links');
                 ob_flush();
             }
             

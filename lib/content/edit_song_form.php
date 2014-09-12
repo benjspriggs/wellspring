@@ -20,7 +20,7 @@ $token = Token::csrf();
 ?>
 <div id="editcont">
     <h3>Edit song <?=$name?></h3>
-    <form id="editform" enctype="multipart/form-data" action="loading.php" method="POST">
+    <form id="editform" enctype="multipart/form-data" action="loading" method="POST">
         <fieldset>
             <label for="name">Song Name</label><input name="name" id="name" value="<?=$name?>" placeholder="Song name"></li>
             <label for="lyrics">Lyrics</label><textarea name="lyrics" id="lyrics" maxlength="200" placeholder="Lyrics"><?=$lyrics?></textarea>
@@ -63,7 +63,7 @@ $token = Token::csrf();
         <input type="hidden" id="token" name="token" value="<?=$token?>">
         <input type="hidden" id="action" name="action" value="updateSong">
     </form>
-    <form id="deleteform" action="loading.php" method="POST">
+    <form id="deleteform" action="loading" method="POST">
         <div id="delete">
             <input type="submit" name="delte" value="Delete Song">
             <input type="hidden" id="info" name="info" value="<?=htmlspecialchars(json_encode($r))?>">
