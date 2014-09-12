@@ -92,7 +92,7 @@ foreach($results as $entry => $song){
             
             if ($media){
                 ob_start();
-                include('media_basic_links');
+                include('media_basic_links.php');
                 ob_flush();
             }
             

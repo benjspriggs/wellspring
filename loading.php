@@ -1,5 +1,5 @@
 <?php
-require 'lib/init';
+require 'lib/init.php';
 
 if (Token::check(Input::get('token'))){
     $a = array('logIn',
@@ -14,10 +14,10 @@ if (Token::check(Input::get('token'))){
                'updateGroup',
                'deleteGroup');
     if (in_array(Input::get('action'), $a)){
-        require_once 'lib/actions/'. Input::get('action') .'';
+        require_once 'lib/actions/'. Input::get('action') .'.php';
     }
 } elseif (Token::check(Input::get('exittoken'))){
-    require_once 'lib/actions/logOut';
+    require_once 'lib/actions/logOut.php';
 } else {
     echo 'CSRF test failed.<br>';
 }

@@ -1,8 +1,8 @@
 <?php
 ob_start();
-require_once(Config::get('root/lib').'checks/loggedin');
-require_once(Config::get('root/lib').'checks/login-remember');
-require_once(Config::get('root/lib').'checks/accepted');
+require_once(Config::get('root/lib').'checks/loggedin.php');
+require_once(Config::get('root/lib').'checks/login-remember.php');
+require_once(Config::get('root/lib').'checks/accepted.php');
 ob_flush();
 ?>
 <!DOCTYPE html>
@@ -37,12 +37,12 @@ ob_flush();
     
     <body>
         <div class="page">
-            <?php include(Config::get('root/content').'incl/header');?>
+            <?php include(Config::get('root/content').'incl/header.php');?>
             <div id="content">
                 <?php $path = $t->getContent(); include_once(Config::get('root/content'). "$path");?>
             </div>
             <div id="sidebar">
-                <?php include_once(Config::get('root/content').'incl/updates');?>
+                <?php include_once(Config::get('root/content').'incl/updates.php');?>
             </div>
             <div id="footer">
                 <?php include_once(Config::get('root/content').'incl/footer.html');?>

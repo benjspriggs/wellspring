@@ -1,13 +1,13 @@
 <?php
 $fp = dirname(__FILE__);
-require_once $fp . '/database';
-require_once $fp . '/functions';
-require_once $fp . '/config';
+require_once $fp . '/database.php';
+require_once $fp . '/functions.php';
+require_once $fp . '/config.php';
 
 
 spl_autoload_register(function($class){
-    if (is_file(dirname(__FILE__). '/classes/'. $class .'')){
-        include dirname(__FILE__). '/classes/'. $class .'';
+    if (is_file(dirname(__FILE__). '/classes/'. $class .'.php')){
+        include dirname(__FILE__). '/classes/'. $class .'.php';
     }}, true);
 
 session_save_path(Config::get('session/save_loc'));

@@ -15,9 +15,9 @@ foreach (Config::get('tables/content') as $index => $tableName){
 <a href="user/edit?user_id=<?=$user_id?>">Edit account details</a>
 <h3>Groups</h3>
 <?php
-include(Config::get('root/content').'group_view_attribute_basic');
+include(Config::get('root/content').'group_view_attribute_basic.php');
 ?>
 <h3>Songs</h3>
 <?php
-include(Config::get('root/content').'song_view_attribute_basic');
+include(Config::get('root/content').'song_view_attribute_basic.php');
 ?>

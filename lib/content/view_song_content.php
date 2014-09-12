@@ -56,7 +56,7 @@ if ($accepted){
 <?php
 if ($media){
     ob_start();
-    include('media_basic_represent');
+    include('media_basic_represent.php');
     ob_flush();
 }
 

@@ -1,5 +1,5 @@
 <?php
-require_once('lib/init');
+require_once('lib/init.php');
 $t = new Template('Write', array('main', 'form'), 'write_form', 'Upload a song to the Wellspring database!', array('formcheck'));
-require_once(Config::get('root/content') . 'template/template');
+require_once(Config::get('root/content') . 'template/template.php');
 ?>
