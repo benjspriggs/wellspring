@@ -1,5 +1,5 @@
 <div class="form-cont">
-    <form id="upldform" enctype="multipart/form-data" action="loading.php" method="POST">
+    <form id="upldform" enctype="multipart/form-data" action="loading" method="POST">
         <h3>Add a song</h3>
         <fieldset>
             <label for="name">Song name:</label><input type="text" name="name" maxlength="25" id="name" placeholder="If Thou Lovest Me" required><br>
@@ -12,7 +12,7 @@
         if ($loggedin){
             echo "<li><label for=\"sheet_music\">Sheet music, video performances:</label><input type=\"file\" name=\"sfile[]\" id=\"sfile\" multiple></li><br>";
         } else {
-            echo "<li>You'll need to log in in order to upload a file. You can log in <a href=\"login.php\">here</a>.</li><br>";
+            echo "<li>You'll need to log in in order to upload a file. You can log in <a href=\"login\">here</a>.</li><br>";
         }?>
         </fieldset>
         

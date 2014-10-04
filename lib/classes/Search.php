@@ -1,5 +1,5 @@
 <?php
-require_once('functions.php');
+require_once('functions');
 
 class Search {
     private $PDO;

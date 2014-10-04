@@ -9,7 +9,7 @@ $results = $SM->viewGroups('all', TRUE, TRUE, TRUE, $user_id);
 echo "<div class=\"flex-box\">";
 foreach ($results as $index => $group){
     echo "<article class=\"group\">";
-    echo "<h4><a href=\"group/view.php?group_id=". $group['group_id'] ."\">". $group['group_name'] ."</h4></a>";
+    echo "<h4><a href=\"group/view?group_id=". $group['group_id'] ."\">". $group['group_name'] ."</h4></a>";
     echo "<p>Description: ". $group['group_desc'] ."</p>";
     echo "<span>Type: ". $group['type_name'] ."</span>";
     echo "</article>";

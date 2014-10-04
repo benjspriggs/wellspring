@@ -6,7 +6,7 @@ $res = $SM->viewSongs(array('num_res' => $estimate, 'page' => 1));
 $type = $STH->get('group_type', '*')->getResults();
 ?>
 <div class="form-cont">
-    <form id="grpform" enctype="multipart/form-data" action="loading.php" method="POST">
+    <form id="grpform" enctype="multipart/form-data" action="loading" method="POST">
         <h3>Create a new Group</h3>
         <fieldset>
             <label for="name">Group Name:</label><input type="text" name="name" id="name" maxlength="40" placeholder="Group Name" required>

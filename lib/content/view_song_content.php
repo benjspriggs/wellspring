@@ -32,7 +32,7 @@ if ($group['count'] > 1){
 <h2 id="song_name"><?=$song['song_name']?></h2>
 <?php
 if ($accepted){
-    echo "<a href=\"song/edit.php?song_id=". Input::get('song_id') ."\">Edit</a>";
+    echo "<a href=\"song/edit?song_id=". Input::get('song_id') ."\">Edit</a>";
 }
 ?>
 <article>
@@ -45,7 +45,7 @@ if ($accepted){
     if (isset($group)){
         $r = '';
         for ($g = 0; $g < $alliance['count']; $g++){
-            $r .= "<a href=\"group/view.php?group_id=". $alliance[$g]['group_id'] ."\">". $alliance[$g]['group_name']. "</a>, and ";
+            $r .= "<a href=\"group/view?group_id=". $alliance[$g]['group_id'] ."\">". $alliance[$g]['group_name']. "</a>, and ";
         }
         echo substr($r, 0, -6);
     } else {

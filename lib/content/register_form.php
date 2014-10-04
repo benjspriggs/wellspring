@@ -1,5 +1,5 @@
 <div class="form-cont">
-<form action="loading.php" method="POST" name="register" id="registerForm">
+<form action="loading" method="POST" name="register" id="registerForm">
     <h4>Register</h4>
     <fieldset>
         <input type="text" id="username" name="username" max="20" value="<?=Input::get('username')?>"required placeholder="Username">
@@ -17,6 +17,6 @@
     <input type="hidden" id="token" name="token" value="<?=Token::csrf();?>">
     <input type="hidden" id="action" name="action" value="registerUser">
 
-<p>Already have an account? <a href="login.php">Log in here</a>.</p>
+<p>Already have an account? <a href="login">Log in here</a>.</p>
 </form>
 </div>

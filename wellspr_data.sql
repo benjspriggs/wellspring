@@ -3,7 +3,7 @@
 -- http://wwwmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 06, 2014 at 02:12 AM
+-- Generation Time: Sep 06, 2014 at 11:12 PM
 -- Server version: 5.6.16
 -- PHP Version: 5.5.11
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `wellspr_test`
+-- Database: `wellspr_data`
 --
 
 -- --------------------------------------------------------
@@ -54,14 +54,6 @@ CREATE TABLE IF NOT EXISTS `groups` (
   KEY `type` (`type`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
---
--- Dumping data for table `groups`
---
-
-INSERT INTO `groups` (`group_id`, `group_name`, `group_desc`, `type`, `user_id`) VALUES
-(5, 'YES', 'FINALLY', 1, 1),
-(9, 'Cool, dood', 'yeah', 2, 0);
-
 -- --------------------------------------------------------
 
 --
@@ -79,16 +71,6 @@ CREATE TABLE IF NOT EXISTS `groups_lookup` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
---
--- Dumping data for table `groups_lookup`
---
-
-INSERT INTO `groups_lookup` (`lookup_id`, `group_id`, `song_id`, `user_id`) VALUES
-(1, 9, 37, 0),
-(2, 9, 49, 0),
-(3, 9, 50, 0),
-(5, 5, 49, 1);
-
 -- --------------------------------------------------------
 
 --
@@ -102,14 +84,6 @@ CREATE TABLE IF NOT EXISTS `group_type` (
   PRIMARY KEY (`type_id`),
   UNIQUE KEY `type_name` (`type_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `group_type`
---
-
-INSERT INTO `group_type` (`type_id`, `type_name`, `type_desc`) VALUES
-(1, 'Album', 'Recorded as a set, or relased as a set to the public - usually by one artist.'),
-(2, 'Compilation', 'Assorted songs that fit a mood, or are complimentary.');
 
 -- --------------------------------------------------------
 
@@ -128,19 +102,6 @@ CREATE TABLE IF NOT EXISTS `media` (
   KEY `song_id` (`song_id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=11 ;
-
---
--- Dumping data for table `media`
---
-
-INSERT INTO `media` (`media_id`, `song_id`, `user_id`, `media_name`, `filetype`, `timestamp`) VALUES
-(2, 37, 1, '9asJe', 'jpg', '2014-07-22 03:08:42'),
-(3, 38, 1, '88la2', 'jpg', '2014-07-22 03:27:04'),
-(4, 38, 1, 'a0uoN', 'jpg', '2014-07-22 03:27:04'),
-(6, 47, 1, 'The Misha Song ', 'mp3', '2014-08-16 03:35:03'),
-(8, 48, 1, 'UpiaE', 'jpg', '2014-08-17 18:56:52'),
-(9, 49, 1, 'rosariaaaans', 'mp4', '2014-08-26 02:58:24'),
-(10, 49, 1, 'FFsplit-2013-03-31_22-01-44-793', 'mp4', '2014-08-26 03:00:23');
 
 -- --------------------------------------------------------
 
@@ -176,25 +137,6 @@ CREATE TABLE IF NOT EXISTS `songs_meta` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=51 ;
 
---
--- Dumping data for table `songs_meta`
---
-
-INSERT INTO `songs_meta` (`song_id`, `song_name`, `user_id`, `lyrics`, `song_desc`, `postdate`, `timestamp`) VALUES
-(30, 'Making sure it works', 1, 'This is really getting out of hand, or something.', 'This is a test song.', '2014-06-27 02:58:02', '2014-08-17 19:22:24'),
-(32, 'hahah', 1, 'ahah', 'ahahaha', '2014-07-02 05:17:05', '2014-07-02 03:17:05'),
-(33, 'aaaaaaaahaha', 1, 'hahah', 'ahah', '2014-07-02 05:18:23', '2014-07-02 03:18:23'),
-(34, 'dfsd', 1, 'asdfasdf', 'asdfaf', '2014-07-02 05:24:51', '2014-07-02 03:24:51'),
-(37, 'plz', 1, 'work', 'thnx', '2014-07-22 05:08:42', '2014-07-22 03:08:42'),
-(38, 'two', 1, 'testing', 'the', '2014-07-22 05:27:04', '2014-07-22 03:27:04'),
-(39, 'this is a story', 0, 'about life, y\\''know', 'like dood', '2014-08-01 04:01:30', '2014-08-01 02:01:30'),
-(40, 'boom bam shebang', 0, 'hello there', 'fadgadsf', '2014-08-05 18:31:37', '2014-08-05 16:31:37'),
-(42, 'why no', 1, 'f', 'd', '2014-08-16 05:25:17', '2014-08-16 03:25:17'),
-(47, 'Zdsd', 1, 'asdasd', 'asda', '2014-08-16 05:35:03', '2014-08-16 03:35:03'),
-(48, 'delete me', 1, 'please', 'do it', '2014-08-17 20:55:56', '2014-08-17 18:55:56'),
-(49, 'video', 0, 'lookie here', 'it works?', '2014-08-26 04:53:06', '2014-09-03 20:12:38'),
-(50, 'testac', 0, 'testac', 'testac', '2014-09-03 22:18:41', '2014-09-03 20:22:39');
-
 -- --------------------------------------------------------
 
 --
@@ -215,23 +157,6 @@ CREATE TABLE IF NOT EXISTS `tags` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=83 ;
 
---
--- Dumping data for table `tags`
---
-
-INSERT INTO `tags` (`song_id`, `user_id`, `tags`, `postdate`, `timestamp`, `tags_id`) VALUES
-(37, 1, 'plz, plz,  k', '2014-08-17 20:52:08', '2014-07-22 03:08:42', 23),
-(38, 1, 'two, tings', '2014-07-22 05:27:04', '2014-07-22 03:27:04', 24),
-(39, 0, 'this, is, a, story, yeah', '2014-08-01 04:01:30', '2014-08-01 02:01:30', 25),
-(40, 0, 'boom, bam, shebang, df,  asdfkajsd,  asdfaskdjf', '2014-08-05 18:31:37', '2014-08-05 16:31:37', 26),
-(42, 1, 'why, no', '2014-08-16 05:25:17', '2014-08-16 03:25:17', 28),
-(47, 1, 'Zdsd, a', '2014-08-16 05:35:03', '2014-08-16 03:35:03', 33),
-(48, 1, 'delete, me, delete, me, agents of shield', '2014-08-17 21:19:55', '2014-08-17 18:55:56', 35),
-(30, 1, 'Making, sure, it, works', '2014-08-17 21:49:39', '2014-08-17 19:30:44', 53),
-(33, 1, 'aaaaaaaahaha', '2014-08-17 22:03:49', '2014-08-17 19:49:48', 80),
-(49, 1, 'video', '2014-08-26 05:00:23', '2014-08-26 02:53:06', 81),
-(50, 0, 'testac', '2014-09-03 22:18:41', '2014-09-03 20:18:41', 82);
-
 -- --------------------------------------------------------
 
 --
@@ -251,14 +176,6 @@ CREATE TABLE IF NOT EXISTS `users` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
-
---
--- Dumping data for table `users`
---
-
-INSERT INTO `users` (`user_id`, `username`, `pass`, `email`, `salt`, `is_verified`, `is_accepted`, `is_admin`) VALUES
-(0, 'anonymous', 'be8d2c5fd7ea1889d37eade115ee6a47', 'mail@yahoo.com', '88bfb546294e94dacfd655c5bc30222e', 0, 0, 0),
-(1, 'novak', '2cf57e4d94d09ccda03d6094b61add5a', 'pokepower@sprico.com', '238034763abccfbe5ce501707b30bdc1', 0, 1, 0);
 
 --
 -- Constraints for dumped tables

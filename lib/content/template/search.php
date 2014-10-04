@@ -12,8 +12,8 @@
             <?php include_once('incl/header.html');?>
             <div id="content">
                 <?php
-                require("php/connect01.php");
-                require("php/functions.php");
+                require("php/connect01");
+                require("php/functions");
                 
                 $database = "wellspr_test";
                 $dbs = mysqli_select_db($dbc, $database);
@@ -35,7 +35,7 @@
                             while ($results = mysqli_fetch_array($search_query_result, MYSQLI_ASSOC)){
                                 //echo $results['song_name'] ."<br><br>\n";
                                 //echo "Lyrics: " . $results['lyrics'] . "<br>\n";
-                                echo "<a href=\"song_view.php?song_id=" . $results['song_id'] . "\">" . $results['song_name'] ."</a><br>
+                                echo "<a href=\"song_view?song_id=" . $results['song_id'] . "\">" . $results['song_name'] ."</a><br>
                                         Song description: " . $results['song_desc'] ."<br> Lyrics:<br> ". $results['lyrics'] ."<br><br>\n";
                             }
                             echo "</div>";
@@ -56,7 +56,7 @@
                 ?>
             </div>
             <div id="sidebar">
-                <?php include_once('incl/updates.php');?>
+                <?php include_once('incl/updates');?>
             </div>
             <div id="footer">
                 <?php include_once('incl/footer.html');?>
