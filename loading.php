@@ -1,4 +1,5 @@
 <?php
+ob_start();
 require 'lib/init.php';
 
 if (Token::check(Input::get('token'))){
@@ -14,17 +15,19 @@ if (Token::check(Input::get('token'))){
                'updateGroup',
                'deleteGroup');
     if (in_array(Input::get('action'), $a)){
+        ob_start();
         require_once 'lib/actions/'. Input::get('action') .'.php';
+        ob_flush();
     }
 } elseif (Token::check(Input::get('exittoken'))){
     require_once 'lib/actions/logOut.php';
 } else {
     echo 'CSRF test failed.<br>';
 }
-##Uncomment to automatically redirect after error/ success page
-//if (!empty($_SERVER['HTTP_REFERER'])) {
-//    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
-//}
+
+if (!empty($_SERVER['HTTP_REFERER'])) {
+    header("Refresh:5; url=". $_SERVER['HTTP_REFERER'], true, 303);
+}
 
 switch (Input::get('action')){
     case("addSong"):
@@ -41,4 +44,6 @@ switch (Input::get('action')){
         echo "<a href=\"home.php\">Return to home</a>";
         break;
 }
+
+ob_end_flush();
 ?>
